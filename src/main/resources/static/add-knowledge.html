@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Knowledge - HandoffHub</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #080b14;
+            color: #ffffff;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 240px;
+            height: 100vh;
+            background: #0d111d;
+            border-right: 1px solid #1d2638;
+            padding: 25px 18px;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #00e5ff;
+            margin-bottom: 35px;
+        }
+
+        .nav-item {
+            display: block;
+            width: 100%;
+            padding: 13px 14px;
+            margin-bottom: 6px;
+            border-radius: 10px;
+            color: #9ca7bb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #111d31;
+            color: #00e5ff;
+        }
+
+        .main {
+            margin-left: 240px;
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 30px;
+            color: #ffffff;
+        }
+
+        .topbar p {
+            color: #8d98ac;
+            margin-top: 8px;
+        }
+
+        .form-card {
+            max-width: 750px;
+            background: #0d111d;
+            border: 1px solid #1c2940;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.05);
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 9px;
+            color: #cbd5e1;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            padding: 14px;
+            border: 1px solid #26344d;
+            border-radius: 10px;
+            background: #080d18;
+            color: #ffffff;
+            outline: none;
+            font-size: 14px;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #00e5ff;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.15);
+        }
+
+        textarea {
+            min-height: 160px;
+            resize: vertical;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #00e5ff;
+            color: #061018;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .submit-btn:hover {
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .message {
+            margin-top: 18px;
+            padding: 13px;
+            border-radius: 9px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .success {
+            display: block;
+            background: rgba(0, 255, 150, 0.08);
+            border: 1px solid #00ff96;
+            color: #00ff96;
+        }
+
+        .error {
+            display: block;
+            background: rgba(255, 70, 70, 0.08);
+            border: 1px solid #ff4646;
+            color: #ff7070;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #00e5ff;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 800px) {
+            .sidebar {
+                width: 190px;
+            }
+
+            .main {
+                margin-left: 190px;
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <div class="logo">HandoffHub</div>
+
+    <a href="dashboard.html" class="nav-item">Dashboard</a>
+    <a href="projects.html" class="nav-item">Projects</a>
+    <a href="handovers.html" class="nav-item">Handovers</a>
+    <a href="knowledge.html" class="nav-item active">Knowledge</a>
+    <a href="risk.html" class="nav-item">Risk</a>
+    <a href="activity.html" class="nav-item">Activity</a>
+    <a href="profile.html" class="nav-item">Profile</a>
+
+</div>
+
+
+<div class="main">
+
+    <div class="topbar">
+        <h1>Add Knowledge</h1>
+        <p>Add important technical or project knowledge to a handover.</p>
+    </div>
+
+
+    <div class="form-card">
+
+        <form id="knowledgeForm">
+
+            <div class="form-group">
+                <label for="handoverId">Handover ID</label>
+
+                <input
+                        type="number"
+                        id="handoverId"
+                        value="2"
+                        required
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="title">Knowledge Title</label>
+
+                <input
+                        type="text"
+                        id="title"
+                        placeholder="Enter knowledge title"
+                        required
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="content">Knowledge Content</label>
+
+                <textarea
+                        id="content"
+                        placeholder="Describe the important knowledge..."
+                        required
+                ></textarea>
+            </div>
+
+
+            <div class="form-group">
+                <label for="category">Category</label>
+
+                <select id="category" required>
+                    <option value="">Select Category</option>
+                    <option value="TECHNICAL">TECHNICAL</option>
+                    <option value="BUSINESS">BUSINESS</option>
+                    <option value="PROCESS">PROCESS</option>
+                    <option value="GENERAL">GENERAL</option>
+                </select>
+            </div>
+
+
+            <button type="submit" class="submit-btn">
+                Add Knowledge
+            </button>
+
+            <div id="message" class="message"></div>
+
+        </form>
+
+
+        <a href="#" id="backLink" class="back-link">
+            ← Back to Handover Details
+        </a>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const params = new URLSearchParams(window.location.search);
+
+    const urlHandoverId = params.get("id");
+
+    const handoverIdInput = document.getElementById("handoverId");
+
+    const backLink = document.getElementById("backLink");
+
+
+    if (urlHandoverId) {
+        handoverIdInput.value = urlHandoverId;
+
+        backLink.href =
+            "handover-details.html?id=" + urlHandoverId;
+    } else {
+        backLink.href =
+            "handover-details.html?id=" + handoverIdInput.value;
+    }
+
+
+    document.getElementById("knowledgeForm").addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+
+        const handoverId =
+            document.getElementById("handoverId").value;
+
+        const title =
+            document.getElementById("title").value.trim();
+
+        const content =
+            document.getElementById("content").value.trim();
+
+        const category =
+            document.getElementById("category").value;
+
+
+        const message =
+            document.getElementById("message");
+
+
+        if (!handoverId || !title || !content || !category) {
+
+            message.className = "message error";
+
+            message.textContent =
+                "Please fill all fields.";
+
+            return;
+        }
+
+
+        const knowledgeData = {
+
+            title: title,
+
+            content: content,
+
+            category: category,
+
+            handover: {
+                id: Number(handoverId)
+            }
+
+        };
+
+
+        try {
+
+            const response = await fetch("/api/knowledge", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(knowledgeData)
+
+            });
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to add knowledge"
+                );
+
+            }
+
+
+            const result = await response.json();
+
+
+            message.className = "message success";
+
+            message.textContent =
+                "Knowledge added successfully! Knowledge ID: #" + result.id;
+
+
+            document.getElementById("title").value = "";
+
+            document.getElementById("content").value = "";
+
+            document.getElementById("category").value = "";
+
+
+        } catch (error) {
+
+            message.className = "message error";
+
+            message.textContent =
+                "Error: " + error.message;
+
+        }
+
+    });
+
+</script>
+
+</body>
+</html>

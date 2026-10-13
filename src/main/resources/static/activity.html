@@ -1,0 +1,405 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HandoffHub - Activity</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: #080b14;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            min-height: 100vh;
+            flex-shrink: 0;
+            background: #0d111d;
+            border-right: 1px solid #20283a;
+            padding: 28px 18px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00e5ff;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            font-size: 12px;
+            color: #6f7a90;
+            margin-bottom: 35px;
+            line-height: 1.5;
+        }
+
+        .nav-title {
+            color: #59657a;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 12px 10px;
+        }
+
+        .nav-item {
+            display: block;
+            width: 100%;
+            padding: 13px 14px;
+            margin-bottom: 6px;
+            border-radius: 10px;
+            color: #9ca7bb;
+            background: transparent;
+            border: none;
+            font-size: 15px;
+            font-family: Arial, sans-serif;
+            text-align: left;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #101d2d;
+            color: #00e5ff;
+            box-shadow: inset 2px 0 0 #00e5ff;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 35px 40px;
+        }
+
+        .topbar { margin-bottom: 30px; }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .topbar p {
+            margin-top: 8px;
+            color: #7f8ba0;
+            line-height: 1.5;
+        }
+
+        .activity-card {
+            background: linear-gradient(145deg, #101624, #0d121e);
+            border: 1px solid #202b3e;
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        .activity-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .activity-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .activity-count {
+            color: #00e5ff;
+            font-size: 13px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 18px 0;
+            border-bottom: 1px solid #20283a;
+        }
+
+        .activity-item:last-child { border-bottom: none; }
+
+        .activity-icon {
+            width: 42px;
+            height: 42px;
+            min-width: 42px;
+            border-radius: 50%;
+            background: #102a31;
+            color: #00e5ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .activity-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .activity-action {
+            font-size: 16px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .activity-meta {
+            margin-top: 7px;
+            color: #7f8ba0;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 50px 20px;
+            color: #7f8ba0;
+            line-height: 1.6;
+        }
+
+        .refresh-btn {
+            margin-top: 20px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            background: transparent;
+            color: #00e5ff;
+            border: 1px solid #00e5ff;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .refresh-btn:hover { background: #102a31; }
+
+        .refresh-btn:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .error { color: #fca5a5; }
+
+        @media (max-width: 800px) {
+            .layout { display: block; }
+
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+                padding: 20px;
+            }
+
+            .main { padding: 25px 20px; }
+            .activity-card { padding: 18px; }
+        }
+
+        @media (max-width: 450px) {
+            .topbar h1 { font-size: 26px; }
+
+            .activity-item { gap: 12px; }
+
+            .activity-icon {
+                width: 36px;
+                height: 36px;
+                min-width: 36px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">HandoffHub</div>
+        <div class="tagline">
+            Knowledge shouldn't leave with people.
+        </div>
+
+        <div class="nav-title">Workspace</div>
+
+        <a href="/dashboard.html" class="nav-item">Dashboard</a>
+        <a href="/projects.html" class="nav-item">Projects</a>
+        <a href="/handovers.html" class="nav-item">Handovers</a>
+        <a href="/tasks.html" class="nav-item">Tasks</a>
+        <a href="/issues.html" class="nav-item">Issues</a>
+        <a href="/knowledge.html" class="nav-item">Knowledge</a>
+        <a href="/risk.html" class="nav-item">Risk</a>
+
+        <div class="nav-title">System</div>
+
+        <a href="/activity.html" class="nav-item active">Activity</a>
+        <a href="/profile.html" class="nav-item">Profile</a>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+        <header class="topbar">
+            <h1>Activity</h1>
+            <p>Track important actions and updates across your handovers.</p>
+        </header>
+
+        <section class="activity-card">
+            <div class="activity-heading">
+                <div class="activity-title">Recent Activity</div>
+                <div class="activity-count" id="activityCount">
+                    Loading...
+                </div>
+            </div>
+
+            <div id="activityContainer" aria-live="polite">
+                <div class="empty">Loading activity...</div>
+            </div>
+
+            <button type="button" class="refresh-btn" id="refreshButton">
+                Refresh Activity
+            </button>
+        </section>
+    </main>
+</div>
+
+<script>
+    const container = document.getElementById("activityContainer");
+    const activityCount = document.getElementById("activityCount");
+    const refreshButton = document.getElementById("refreshButton");
+
+    function getActivityIcon(action) {
+        const value = (action || "").toLowerCase();
+
+        if (value.includes("issue")) return "!";
+        if (value.includes("task")) return "T";
+        if (value.includes("knowledge")) return "K";
+        if (value.includes("resource")) return "R";
+        if (value.includes("submitted")) return "S";
+        if (value.includes("approved")) return "A";
+        if (value.includes("accepted")) return "✓";
+
+        return "•";
+    }
+
+    function formatTimestamp(value) {
+        if (!value) return "Recently";
+
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+            return String(value).replace("T", " ").split(".")[0];
+        }
+
+        return date.toLocaleString();
+    }
+
+    function showError(text) {
+        activityCount.textContent = "Unavailable";
+        container.replaceChildren();
+
+        const errorMessage = document.createElement("div");
+        errorMessage.className = "empty error";
+        errorMessage.textContent = text;
+
+        container.appendChild(errorMessage);
+    }
+
+    async function loadActivities() {
+        refreshButton.disabled = true;
+        refreshButton.textContent = "Refreshing...";
+        activityCount.textContent = "Loading...";
+
+        container.replaceChildren();
+
+        const loading = document.createElement("div");
+        loading.className = "empty";
+        loading.textContent = "Loading activity...";
+        container.appendChild(loading);
+
+        try {
+            const response = await fetch("/api/activities");
+
+            if (!response.ok) {
+                throw new Error("Server returned HTTP " + response.status);
+            }
+
+            const activities = await response.json();
+            container.replaceChildren();
+
+            if (!Array.isArray(activities) || activities.length === 0) {
+                activityCount.textContent = "0 events";
+
+                const empty = document.createElement("div");
+                empty.className = "empty";
+                empty.textContent = "No activity available yet.";
+                container.appendChild(empty);
+                return;
+            }
+
+            activityCount.textContent =
+                activities.length +
+                (activities.length === 1 ? " event" : " events");
+
+            activities.forEach(function(activity) {
+                const item = document.createElement("div");
+                item.className = "activity-item";
+
+                const icon = document.createElement("div");
+                icon.className = "activity-icon";
+                icon.textContent = getActivityIcon(activity.action);
+
+                const info = document.createElement("div");
+                info.className = "activity-info";
+
+                const action = document.createElement("div");
+                action.className = "activity-action";
+                action.textContent = activity.action || "Activity updated";
+
+                const meta = document.createElement("div");
+                meta.className = "activity-meta";
+
+                const handover = activity.handover;
+                const handoverId = handover && handover.id != null
+                    ? handover.id
+                    : "Unknown";
+
+                const handoverTitle = handover && handover.title
+                    ? handover.title
+                    : "Handover";
+
+                meta.textContent =
+                    "Handover #" + handoverId +
+                    " — " + handoverTitle +
+                    " • " + formatTimestamp(activity.createdAt);
+
+                info.appendChild(action);
+                info.appendChild(meta);
+                item.appendChild(icon);
+                item.appendChild(info);
+                container.appendChild(item);
+            });
+
+        } catch (error) {
+            console.error("Activity API error:", error);
+            showError(
+                "Unable to load activity. Check that the application is running and try refreshing."
+            );
+        } finally {
+            refreshButton.disabled = false;
+            refreshButton.textContent = "Refresh Activity";
+        }
+    }
+
+    refreshButton.addEventListener("click", loadActivities);
+    loadActivities();
+</script>
+</body>
+</html>

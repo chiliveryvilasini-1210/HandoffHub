@@ -1,0 +1,491 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | HandoffHub</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #070b14;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            min-height: 100vh;
+            flex-shrink: 0;
+            background: #0b1120;
+            border-right: 1px solid #18243a;
+            padding: 25px 18px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00e5ff;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .tagline {
+            color: #6f7a90;
+            font-size: 12px;
+            text-align: center;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        .nav-title {
+            color: #59657a;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 12px 10px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 13px 14px;
+            margin-bottom: 6px;
+            border-radius: 10px;
+            color: #9ca7bb;
+            text-decoration: none;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(0, 229, 255, 0.12);
+            color: #00e5ff;
+            box-shadow: inset 2px 0 0 #00e5ff;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 35px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .topbar h1 {
+            font-size: 30px;
+        }
+
+        .topbar p,
+        .profile-header p,
+        .info-section p {
+            color: #9ca7bb;
+            margin-top: 7px;
+            line-height: 1.7;
+        }
+
+        .user-badge,
+        .avatar {
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00e5ff, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .user-badge {
+            width: 45px;
+            height: 45px;
+        }
+
+        .profile-container {
+            max-width: 900px;
+        }
+
+        .profile-card {
+            background: #0c1424;
+            border: 1px solid #1b2a43;
+            border-radius: 18px;
+            padding: 35px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #1b2a43;
+        }
+
+        .avatar {
+            width: 90px;
+            height: 90px;
+            font-size: 32px;
+        }
+
+        .profile-header h2 {
+            font-size: 25px;
+            margin-bottom: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .profile-header p {
+            overflow-wrap: anywhere;
+        }
+
+        .role-badge {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: rgba(139, 92, 246, 0.15);
+            color: #a78bfa;
+            font-size: 13px;
+        }
+
+        .details {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .detail-box {
+            background: #101a2d;
+            border: 1px solid #1c2b45;
+            border-radius: 12px;
+            padding: 20px;
+            min-width: 0;
+        }
+
+        .detail-label {
+            color: #7f8ba3;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            overflow-wrap: anywhere;
+        }
+
+        .status {
+            color: #22c55e;
+        }
+
+        .info-section {
+            margin-top: 30px;
+        }
+
+        .info-section h3 {
+            margin-bottom: 15px;
+        }
+
+        .logout-btn {
+            margin-top: 30px;
+            padding: 12px 20px;
+            border: 1px solid #ef4444;
+            background: transparent;
+            color: #ef4444;
+            border-radius: 9px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .logout-btn:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #fca5a5;
+        }
+
+        @media (max-width: 800px) {
+            .sidebar {
+                width: 210px;
+            }
+
+            .main {
+                padding: 25px;
+            }
+
+            .details {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-card {
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .topbar h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">HandoffHub</div>
+        <div class="tagline">
+            Knowledge shouldn't leave with people.
+        </div>
+
+        <div class="nav-title">Workspace</div>
+
+        <a href="/dashboard.html" class="nav-item">Dashboard</a>
+        <a href="/projects.html" class="nav-item">Projects</a>
+        <a href="/handovers.html" class="nav-item">Handovers</a>
+        <a href="/tasks.html" class="nav-item">Tasks</a>
+        <a href="/issues.html" class="nav-item">Issues</a>
+        <a href="/knowledge.html" class="nav-item">Knowledge</a>
+        <a href="/risk.html" class="nav-item">Risk</a>
+
+        <div class="nav-title">System</div>
+
+        <a href="/activity.html" class="nav-item">Activity</a>
+        <a href="/profile.html" class="nav-item active">Profile</a>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+        <div class="topbar">
+            <div>
+                <h1>My Profile</h1>
+                <p>Manage your HandoffHub account information.</p>
+            </div>
+
+            <div class="user-badge" id="topAvatar">U</div>
+        </div>
+
+        <div class="profile-container">
+            <div class="profile-card">
+
+                <div class="profile-header">
+                    <div class="avatar" id="profileAvatar">U</div>
+
+                    <div>
+                        <h2 id="profileName">Loading profile...</h2>
+                        <p id="profileEmail">Fetching account information...</p>
+                        <span class="role-badge" id="profileRole">USER</span>
+                    </div>
+                </div>
+
+                <div class="details">
+                    <div class="detail-box">
+                        <div class="detail-label">Full Name</div>
+                        <div class="detail-value" id="detailName">Loading...</div>
+                    </div>
+
+                    <div class="detail-box">
+                        <div class="detail-label">Email Address</div>
+                        <div class="detail-value" id="detailEmail">Loading...</div>
+                    </div>
+
+                    <div class="detail-box">
+                        <div class="detail-label">Role</div>
+                        <div class="detail-value" id="detailRole">Loading...</div>
+                    </div>
+
+                    <div class="detail-box">
+                        <div class="detail-label">Account Status</div>
+                        <div class="detail-value status" id="accountStatus">
+                            ● Session active
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <h3>About HandoffHub</h3>
+                    <p>
+                        HandoffHub is a structured knowledge and responsibility
+                        handover platform designed to prevent critical project
+                        knowledge from being lost during team transitions.
+                    </p>
+                </div>
+
+                <button type="button" class="logout-btn" id="logoutButton">
+                    Logout
+                </button>
+
+                <div class="message" id="profileMessage" role="status"></div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    const profileName = document.getElementById("profileName");
+    const profileEmail = document.getElementById("profileEmail");
+    const profileRole = document.getElementById("profileRole");
+    const detailName = document.getElementById("detailName");
+    const detailEmail = document.getElementById("detailEmail");
+    const detailRole = document.getElementById("detailRole");
+    const profileAvatar = document.getElementById("profileAvatar");
+    const topAvatar = document.getElementById("topAvatar");
+    const profileMessage = document.getElementById("profileMessage");
+    const logoutButton = document.getElementById("logoutButton");
+
+    function getInitials(name) {
+        if (!name || !name.trim()) return "U";
+
+        return name.trim()
+            .split(/\s+/)
+            .slice(0, 2)
+            .map(part => part.charAt(0).toUpperCase())
+            .join("");
+    }
+
+    function displayProfile(user) {
+        const name = user.name || user.fullName || "User";
+        const email = user.email || "Not available";
+        const role = (user.role || "USER").toUpperCase();
+
+        profileName.textContent = name;
+        profileEmail.textContent = email;
+        profileRole.textContent = role;
+
+        detailName.textContent = name;
+        detailEmail.textContent = email;
+        detailRole.textContent =
+            role === "ADMIN" ? "Administrator" : "User";
+
+        const initials = getInitials(name);
+        profileAvatar.textContent = initials;
+        topAvatar.textContent = initials;
+    }
+
+    async function loadProfile() {
+        profileMessage.textContent = "";
+
+        try {
+            /*
+             * This endpoint must return the currently authenticated user's
+             * account details. It is not assumed to exist unless configured
+             * in the backend.
+             */
+            const response = await fetch("/api/auth/me", {
+                method: "GET",
+                credentials: "same-origin",
+                headers: {
+                    "Accept": "application/json"
+                }
+            });
+
+            if (response.status === 401 || response.status === 403) {
+                window.location.replace("/login.html");
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error("Profile endpoint returned HTTP " + response.status);
+            }
+
+            const user = await response.json();
+
+            if (!user || typeof user !== "object") {
+                throw new Error("Invalid profile response");
+            }
+
+            displayProfile(user);
+
+        } catch (error) {
+            console.error("Profile loading error:", error);
+
+            profileName.textContent = "Profile unavailable";
+            profileEmail.textContent = "Could not load account information.";
+            profileRole.textContent = "UNKNOWN";
+            detailName.textContent = "Unavailable";
+            detailEmail.textContent = "Unavailable";
+            detailRole.textContent = "Unavailable";
+            profileAvatar.textContent = "U";
+            topAvatar.textContent = "U";
+
+            profileMessage.textContent =
+                "The profile API could not be reached. Your account data has not been changed.";
+        }
+    }
+
+    async function logout() {
+        logoutButton.disabled = true;
+        logoutButton.textContent = "Logging out...";
+        profileMessage.textContent = "";
+
+        try {
+            const response = await fetch("/logout", {
+                method: "POST",
+                credentials: "same-origin"
+            });
+
+            if (response.ok || response.redirected) {
+                window.location.replace("/login.html?logout");
+                return;
+            }
+
+            throw new Error("Logout returned HTTP " + response.status);
+
+        } catch (error) {
+            console.error("Logout error:", error);
+            profileMessage.textContent =
+                "Logout failed. Please try again.";
+            logoutButton.disabled = false;
+            logoutButton.textContent = "Logout";
+        }
+    }
+
+    logoutButton.addEventListener("click", logout);
+    loadProfile();
+</script>
+</body>
+</html>

@@ -1,0 +1,697 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HandoffHub - Dashboard</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: #080b14;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .layout { display: flex; min-height: 100vh; }
+
+        .sidebar {
+            width: 240px;
+            min-height: 100vh;
+            background: #0d111d;
+            border-right: 1px solid #20283a;
+            padding: 28px 18px;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00e5ff;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            font-size: 12px;
+            color: #6f7a90;
+            margin-bottom: 35px;
+            line-height: 1.5;
+        }
+
+        .nav-title {
+            color: #59657a;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 12px 10px;
+        }
+
+        .nav-item {
+            display: block;
+            width: 100%;
+            padding: 13px 14px;
+            margin-bottom: 6px;
+            border-radius: 10px;
+            color: #9ca7bb;
+            text-decoration: none;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            font-size: 15px;
+            font-family: Arial, sans-serif;
+            text-align: left;
+            transition: 0.2s;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: #101d2d;
+            color: #00e5ff;
+            box-shadow: inset 2px 0 0 #00e5ff;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 35px 40px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            gap: 20px;
+        }
+
+        .welcome h1 { margin: 0; font-size: 30px; }
+
+        .welcome p {
+            margin-top: 8px;
+            color: #7f8ba0;
+            line-height: 1.5;
+        }
+
+        .profile {
+            width: 42px;
+            height: 42px;
+            min-width: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00e5ff, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #080b14;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #101624, #0d121e);
+            border: 1px solid #202b3e;
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.04);
+            min-width: 0;
+        }
+
+        .card:hover {
+            border-color: #00e5ff;
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.08);
+        }
+
+        .card-title { color: #7f8ba0; font-size: 13px; }
+
+        .number {
+            margin-top: 12px;
+            font-size: 34px;
+            font-weight: bold;
+            color: #00e5ff;
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+            gap: 20px;
+            margin-top: 22px;
+            align-items: start;
+        }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .empty-box {
+            min-height: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #59657a;
+            border: 1px dashed #293449;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .handover-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .handover-card {
+            background: #0b1220;
+            border: 1px solid #202b3e;
+            border-radius: 12px;
+            padding: 18px;
+            width: 100%;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .handover-card:hover {
+            border-color: #00e5ff;
+            transform: translateY(-2px);
+        }
+
+        .handover-title {
+            font-size: 17px;
+            font-weight: bold;
+            color: white;
+            line-height: 1.5;
+            margin-bottom: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .handover-description {
+            color: #7f8ba0;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            overflow-wrap: anywhere;
+        }
+
+        .handover-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .meta-label {
+            color: #59657a;
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .status { font-size: 13px; font-weight: bold; }
+
+        .readiness {
+            color: #00e5ff;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .details-link {
+            color: #00e5ff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .details-link:hover { text-decoration: underline; }
+
+        .risk {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 18px;
+            background: #111827;
+            border: 1px solid #202b3e;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+
+        .risk-label { color: #9ca7bb; font-size: 14px; }
+        .risk-value { font-weight: bold; }
+        .risk-readiness { color: #22c55e; font-weight: bold; }
+
+        .risk-summary {
+            margin-top: 14px;
+            color: #7f8ba0;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .risk-breakdown {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .risk-stat {
+            background: #0b1220;
+            border: 1px solid #202b3e;
+            border-radius: 10px;
+            padding: 12px 8px;
+            text-align: center;
+        }
+
+        .risk-stat strong {
+            display: block;
+            color: #00e5ff;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .risk-stat span { color: #7f8ba0; font-size: 11px; }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px;
+            border: 1px solid #202b3e;
+            border-radius: 10px;
+            background: #0b1220;
+        }
+
+        .activity-dot {
+            width: 9px;
+            height: 9px;
+            margin-top: 5px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: #00e5ff;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+        }
+
+        .activity-action {
+            color: #e5edf9;
+            font-size: 14px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .activity-meta {
+            margin-top: 5px;
+            color: #7f8ba0;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .message {
+            color: #7f8ba0;
+            padding: 20px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .error-message { color: #f87171; }
+
+        @media (max-width: 1100px) {
+            .main { padding: 30px 24px; }
+            .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .section-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 650px) {
+            .layout { display: block; }
+
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+                padding: 20px 16px;
+            }
+
+            .tagline { margin-bottom: 20px; }
+            .nav-title { margin-top: 15px; }
+            .main { padding: 24px 16px; }
+            .topbar { margin-bottom: 25px; }
+            .welcome h1 { font-size: 26px; }
+            .stats { grid-template-columns: 1fr; }
+            .section-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="logo">HandoffHub</div>
+        <div class="tagline">Knowledge shouldn't leave with people.</div>
+
+        <div class="nav-title">Workspace</div>
+
+        <a href="/dashboard.html" class="nav-item active">Dashboard</a>
+        <a href="/projects.html" class="nav-item">Projects</a>
+        <a href="/handovers.html" class="nav-item">Handovers</a>
+        <a href="/tasks.html" class="nav-item">Tasks</a>
+        <a href="/issues.html" class="nav-item">Issues</a>
+        <a href="/knowledge.html" class="nav-item">Knowledge</a>
+        <a href="/risk.html" class="nav-item">Risk</a>
+        <a href="/activity.html" class="nav-item">Activity</a>
+        <a href="/profile.html" class="nav-item">Profile</a>
+    </aside>
+
+    <main class="main">
+        <div class="topbar">
+            <div class="welcome">
+                <h1>Dashboard</h1>
+                <p>Welcome back. Here's your handover overview.</p>
+            </div>
+            <div class="profile" title="HandoffHub User">HH</div>
+        </div>
+
+        <div class="stats">
+            <div class="card">
+                <div class="card-title">Total Handovers</div>
+                <div class="number" id="totalHandovers">0</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Draft Handovers</div>
+                <div class="number" id="draftHandovers">0</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Approved Handovers</div>
+                <div class="number" id="approvedHandovers">0</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Accepted Handovers</div>
+                <div class="number" id="acceptedHandovers">0</div>
+            </div>
+        </div>
+
+        <div class="section-grid">
+            <section class="card">
+                <div class="section-title">Handover Overview</div>
+                <div id="handoverOverview" class="empty-box">
+                    Loading handover information...
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="section-title">Knowledge Risk</div>
+
+                <div class="risk">
+                    <span class="risk-label">Overall Risk</span>
+                    <span class="risk-value" id="currentRisk">Calculating...</span>
+                </div>
+
+                <div class="risk">
+                    <span class="risk-label">Average Readiness</span>
+                    <span class="risk-readiness" id="overallReadiness">Calculating...</span>
+                </div>
+
+                <div class="risk-breakdown">
+                    <div class="risk-stat">
+                        <strong id="highRiskCount">—</strong>
+                        <span>High risk</span>
+                    </div>
+                    <div class="risk-stat">
+                        <strong id="mediumRiskCount">—</strong>
+                        <span>Medium risk</span>
+                    </div>
+                    <div class="risk-stat">
+                        <strong id="lowRiskCount">—</strong>
+                        <span>Low risk</span>
+                    </div>
+                </div>
+
+                <div class="risk-summary" id="riskSummary">
+                    Analyzing knowledge records, issues and tasks...
+                </div>
+            </section>
+        </div>
+
+        <section class="card" style="margin-top: 22px;">
+            <div class="section-title">Recent Activity</div>
+            <div id="recentActivities" class="empty-box">
+                Loading recent activity...
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+    function escapeHtml(value) {
+        return String(value ?? "").replace(/[&<>"']/g, function(character) {
+            return {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            }[character];
+        });
+    }
+
+    function setRiskAppearance(level) {
+        var element = document.getElementById("currentRisk");
+        element.textContent = level;
+
+        var colors = {
+            HIGH: "#f87171",
+            MEDIUM: "#f59e0b",
+            LOW: "#22c55e",
+            UNKNOWN: "#9ca7bb"
+        };
+
+        element.style.color = colors[level] || colors.UNKNOWN;
+    }
+
+    fetch("/api/dashboard/stats")
+        .then(function(response) {
+            if (!response.ok) throw new Error("Dashboard statistics API failed");
+            return response.json();
+        })
+        .then(function(data) {
+            document.getElementById("totalHandovers").textContent = data.totalHandovers ?? 0;
+            document.getElementById("draftHandovers").textContent = data.draftHandovers ?? 0;
+            document.getElementById("approvedHandovers").textContent = data.approvedHandovers ?? 0;
+            document.getElementById("acceptedHandovers").textContent = data.acceptedHandovers ?? 0;
+        })
+        .catch(function(error) {
+            console.error("Dashboard statistics error:", error);
+        });
+
+    fetch("/api/handovers")
+        .then(function(response) {
+            if (!response.ok) throw new Error("Handover API failed");
+            return response.json();
+        })
+        .then(async function(handovers) {
+            var overview = document.getElementById("handoverOverview");
+
+            if (!Array.isArray(handovers) || handovers.length === 0) {
+                overview.className = "empty-box";
+                overview.textContent = "No handovers available.";
+                setRiskAppearance("UNKNOWN");
+                document.getElementById("overallReadiness").textContent = "N/A";
+                document.getElementById("riskSummary").textContent = "Create a handover to begin risk analysis.";
+                document.getElementById("highRiskCount").textContent = "0";
+                document.getElementById("mediumRiskCount").textContent = "0";
+                document.getElementById("lowRiskCount").textContent = "0";
+                return;
+            }
+
+            overview.className = "handover-list";
+            overview.innerHTML = handovers.map(function(handover) {
+                var status = String(handover.status || "UNKNOWN").toUpperCase();
+                var statusColor = status === "ACCEPTED" ? "#22c55e"
+                    : status === "APPROVED" ? "#00e5ff"
+                        : status === "DRAFT" ? "#f59e0b" : "#9ca7bb";
+
+                var readiness = Number(handover.readinessScore) || 0;
+
+                return `
+                    <article class="handover-card">
+                        <div class="handover-title">
+                            ${escapeHtml(handover.title || "Handover #" + handover.id)}
+                        </div>
+                        <div class="handover-description">
+                            ${escapeHtml(handover.description || "No description available.")}
+                        </div>
+                        <div class="handover-meta">
+                            <div>
+                                <div class="meta-label">Status</div>
+                                <div class="status" style="color:${statusColor}">
+                                    ${escapeHtml(status)}
+                                </div>
+                            </div>
+                            <div>
+                                <div class="meta-label">Readiness</div>
+                                <div class="readiness">${readiness}/100</div>
+                            </div>
+                            <a class="details-link"
+                               href="/handover-details.html?id=${encodeURIComponent(handover.id)}">
+                                View Details &rarr;
+                            </a>
+                        </div>
+                    </article>
+                `;
+            }).join("");
+
+            var results = await Promise.allSettled(
+                handovers.map(async function(handover) {
+                    var response = await fetch(
+                        "/api/knowledge-risk/" + encodeURIComponent(handover.id)
+                    );
+                    if (!response.ok) throw new Error("Risk API failed for handover " + handover.id);
+
+                    return { handover: handover, risk: await response.json() };
+                })
+            );
+
+            var successful = results
+                .filter(function(result) { return result.status === "fulfilled"; })
+                .map(function(result) { return result.value; });
+
+            if (successful.length === 0) {
+                setRiskAppearance("UNKNOWN");
+                document.getElementById("overallReadiness").textContent = "N/A";
+                document.getElementById("highRiskCount").textContent = "—";
+                document.getElementById("mediumRiskCount").textContent = "—";
+                document.getElementById("lowRiskCount").textContent = "—";
+                document.getElementById("riskSummary").textContent =
+                    "Risk analysis could not be loaded. Please check your Knowledge Risk API.";
+                return;
+            }
+
+            var high = 0, medium = 0, low = 0;
+            var openIssues = 0, pendingTasks = 0, knowledgeRecords = 0;
+            var readinessTotal = 0;
+
+            successful.forEach(function(item) {
+                var level = String(item.risk.riskLevel || "UNKNOWN").toUpperCase();
+
+                if (level === "HIGH") high++;
+                else if (level === "MEDIUM") medium++;
+                else if (level === "LOW") low++;
+                else high++;
+
+                openIssues += Number(item.risk.openIssues) || 0;
+                pendingTasks += Number(item.risk.pendingTasks) || 0;
+                knowledgeRecords += Number(item.risk.knowledgeRecords) || 0;
+
+                readinessTotal += Math.max(0, Math.min(
+                    100, Number(item.handover.readinessScore) || 0
+                ));
+            });
+
+            setRiskAppearance(high > 0 ? "HIGH" : medium > 0 ? "MEDIUM" : "LOW");
+
+            document.getElementById("overallReadiness").textContent =
+                Math.round(readinessTotal / successful.length) + "%";
+            document.getElementById("highRiskCount").textContent = high;
+            document.getElementById("mediumRiskCount").textContent = medium;
+            document.getElementById("lowRiskCount").textContent = low;
+
+            var summary = "Analyzed " + successful.length + " of " + handovers.length
+                + " handovers. " + knowledgeRecords + " knowledge records, "
+                + openIssues + " open issues and " + pendingTasks + " pending tasks.";
+
+            if (successful.length < handovers.length) {
+                summary += " Some handovers could not be analyzed.";
+            }
+
+            document.getElementById("riskSummary").textContent = summary;
+        })
+        .catch(function(error) {
+            console.error("Handover and risk analysis error:", error);
+            var overview = document.getElementById("handoverOverview");
+            overview.className = "empty-box error-message";
+            overview.textContent = "Unable to load handover information.";
+            setRiskAppearance("UNKNOWN");
+            document.getElementById("overallReadiness").textContent = "N/A";
+            document.getElementById("riskSummary").textContent =
+                "Unable to load handovers for risk analysis.";
+        });
+
+    fetch("/api/activities")
+        .then(function(response) {
+            if (!response.ok) throw new Error("Activity API failed");
+            return response.json();
+        })
+        .then(function(activities) {
+            var container = document.getElementById("recentActivities");
+
+            if (!Array.isArray(activities) || activities.length === 0) {
+                container.className = "empty-box";
+                container.textContent = "No activity recorded yet.";
+                return;
+            }
+
+            activities.sort(function(a, b) {
+                return (Number(b.id) || 0) - (Number(a.id) || 0);
+            });
+
+            container.className = "activity-list";
+
+            container.innerHTML = activities.slice(0, 6).map(function(activity) {
+                var action = activity.action || "Handover activity";
+                var handoverLabel = "";
+
+                if (activity.handover) {
+                    handoverLabel = activity.handover.title
+                        || (activity.handover.id ? "Handover #" + activity.handover.id : "");
+                }
+
+                var dateValue = activity.createdAt || activity.created_at
+                    || activity.timestamp || activity.date;
+                var dateLabel = "";
+
+                if (dateValue) {
+                    var parsedDate = new Date(dateValue);
+                    if (!Number.isNaN(parsedDate.getTime())) {
+                        dateLabel = parsedDate.toLocaleString();
+                    }
+                }
+
+                var metaParts = [];
+                if (handoverLabel) metaParts.push(handoverLabel);
+                if (dateLabel) metaParts.push(dateLabel);
+                if (!metaParts.length && activity.id != null) {
+                    metaParts.push("Activity #" + activity.id);
+                }
+
+                return `
+                    <article class="activity-item">
+                        <span class="activity-dot"></span>
+                        <div>
+                            <div class="activity-action">${escapeHtml(action)}</div>
+                            <div class="activity-meta">
+                                ${escapeHtml(metaParts.join(" · ") || "HandoffHub event")}
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join("");
+        })
+        .catch(function(error) {
+            console.error("Recent activity error:", error);
+            var container = document.getElementById("recentActivities");
+            container.className = "empty-box error-message";
+            container.textContent =
+                "Unable to load recent activity. Please check the Activity API.";
+        });
+</script>
+</body>
+</html>

@@ -1,0 +1,419 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Task | HandoffHub</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #070b14;
+            color: #ffffff;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 240px;
+            height: 100vh;
+            overflow-y: auto;
+            background: #0b101c;
+            border-right: 1px solid #1d2a40;
+            padding: 25px 18px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00e5ff;
+            margin-bottom: 35px;
+        }
+
+        .nav-item {
+            display: block;
+            width: 100%;
+            padding: 13px 14px;
+            margin-bottom: 6px;
+            border-radius: 10px;
+            color: #9ca7bb;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #111b2d;
+            color: #00e5ff;
+        }
+
+        .nav-item.active {
+            background: rgba(0, 229, 255, 0.12);
+            color: #00e5ff;
+            border-left: 3px solid #00e5ff;
+        }
+
+        .main {
+            margin-left: 240px;
+            padding: 40px;
+            max-width: 1340px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            margin: 0 0 8px;
+        }
+
+        .page-subtitle {
+            color: #7f8da5;
+            margin-bottom: 35px;
+            line-height: 1.6;
+        }
+
+        .form-card {
+            background: #101724;
+            border: 1px solid #22314a;
+            border-radius: 18px;
+            padding: 35px;
+            width: 100%;
+            max-width: 850px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            width: 100%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 9px;
+            color: #dce6f7;
+            font-size: 14px;
+        }
+
+        input,
+        select,
+        textarea {
+            display: block;
+            width: 100%;
+            min-width: 0;
+            background: #070c15;
+            color: #ffffff;
+            border: 1px solid #2a3a55;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #00e5ff;
+            box-shadow: 0 0 8px rgba(0, 229, 255, 0.25);
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        input[type="date"] {
+            height: 52px;
+            color-scheme: dark;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            border: none;
+            background: #00d9f5;
+            color: #001018;
+            padding: 14px 27px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background: #00f0ff;
+            transform: translateY(-1px);
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .message {
+            display: none;
+            margin-top: 20px;
+            padding: 13px;
+            border-radius: 8px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .success {
+            display: block;
+            background: rgba(0, 255, 140, 0.1);
+            border: 1px solid #00ff8c;
+            color: #00ff8c;
+        }
+
+        .error {
+            display: block;
+            background: rgba(255, 70, 70, 0.1);
+            border: 1px solid #ff4d5a;
+            color: #ff6975;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 25px;
+            color: #00e5ff;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 800px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                padding: 20px;
+            }
+
+            .logo {
+                margin-bottom: 18px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 25px 18px;
+            }
+
+            .form-card {
+                padding: 22px;
+            }
+
+            .page-title {
+                font-size: 27px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="logo">HandoffHub</div>
+
+    <a href="dashboard.html" class="nav-item">Dashboard</a>
+    <a href="projects.html" class="nav-item">Projects</a>
+    <a href="handovers.html" class="nav-item">Handovers</a>
+    <a href="tasks.html" class="nav-item active" aria-current="page">Tasks</a>
+    <a href="issues.html" class="nav-item">Issues</a>
+    <a href="knowledge.html" class="nav-item">Knowledge</a>
+    <a href="risk.html" class="nav-item">Risk</a>
+    <a href="activity.html" class="nav-item">Activity</a>
+    <a href="profile.html" class="nav-item">Profile</a>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+    <h1 class="page-title">Add Task</h1>
+
+    <p class="page-subtitle">
+        Add a responsibility or pending task to a handover.
+    </p>
+
+    <section class="form-card">
+        <form id="taskForm">
+            <div class="form-group">
+                <label for="handoverId">Handover ID</label>
+                <input
+                        type="number"
+                        id="handoverId"
+                        min="1"
+                        step="1"
+                        required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="title">Task Title</label>
+                <input
+                        type="text"
+                        id="title"
+                        maxlength="200"
+                        placeholder="Example: Complete payment API integration"
+                        required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea
+                        id="description"
+                        maxlength="2000"
+                        placeholder="Describe the task..."
+                        required
+                ></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="priority">Priority</label>
+                <select id="priority" required>
+                    <option value="LOW">LOW</option>
+                    <option value="MEDIUM" selected>MEDIUM</option>
+                    <option value="HIGH">HIGH</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status" required>
+                    <option value="PENDING" selected>PENDING</option>
+                    <option value="IN_PROGRESS">IN PROGRESS</option>
+                    <option value="COMPLETED">COMPLETED</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="dueDate">Due Date</label>
+                <input type="date" id="dueDate" required>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                Add Task
+            </button>
+        </form>
+
+        <div id="message" class="message" role="status" aria-live="polite"></div>
+
+        <a href="handovers.html" class="back-btn">
+            &larr; Back to Handovers
+        </a>
+    </section>
+</main>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlHandoverId = urlParams.get("id");
+
+    const handoverIdInput = document.getElementById("handoverId");
+    const taskForm = document.getElementById("taskForm");
+    const message = document.getElementById("message");
+    const submitBtn = document.getElementById("submitBtn");
+
+    // Preserve the handover ID supplied in the URL.
+    // If none is supplied, keep the existing default of 2.
+    handoverIdInput.value = urlHandoverId || "2";
+
+    function showMessage(text, type) {
+        message.className = "message " + type;
+        message.textContent = text;
+    }
+
+    taskForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const handoverId = Number(handoverIdInput.value);
+        const title = document.getElementById("title").value.trim();
+        const description = document.getElementById("description").value.trim();
+        const priority = document.getElementById("priority").value;
+        const status = document.getElementById("status").value;
+        const dueDate = document.getElementById("dueDate").value;
+
+        if (!Number.isInteger(handoverId) || handoverId < 1) {
+            showMessage("Please enter a valid Handover ID.", "error");
+            return;
+        }
+
+        if (!title || !description || !dueDate) {
+            showMessage("Please fill in all required fields.", "error");
+            return;
+        }
+
+        const taskData = {
+            title: title,
+            description: description,
+            priority: priority,
+            status: status,
+            dueDate: dueDate,
+            handover: {
+                id: handoverId
+            }
+        };
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Adding Task...";
+        message.className = "message";
+
+        try {
+            const response = await fetch("/api/tasks", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(taskData)
+            });
+
+            const responseText = await response.text();
+
+            if (!response.ok) {
+                let detail = "";
+
+                try {
+                    const errorData = JSON.parse(responseText);
+                    detail = errorData.message || errorData.error || "";
+                } catch (ignored) {
+                    detail = responseText;
+                }
+
+                throw new Error(
+                    detail || "The server could not create the task. Please check the Handover ID and try again."
+                );
+            }
+
+            showMessage("Task added successfully!", "success");
+
+            document.getElementById("title").value = "";
+            document.getElementById("description").value = "";
+            document.getElementById("priority").value = "MEDIUM";
+            document.getElementById("status").value = "PENDING";
+            document.getElementById("dueDate").value = "";
+
+        } catch (error) {
+            console.error("Add task error:", error);
+            showMessage(
+                error.message || "Could not add task. Please try again.",
+                "error"
+            );
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Add Task";
+        }
+    });
+</script>
+</body>
+</html>

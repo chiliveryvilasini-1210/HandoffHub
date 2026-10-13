@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | HandoffHub</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: #080b14;
+            color: #f1f5f9;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 420px;
+            padding: 35px;
+            background: #111827;
+            border: 1px solid #243247;
+            border-radius: 16px;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.08);
+        }
+
+        .logo {
+            text-align: center;
+            color: #00e5ff;
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            margin: 16px 0 7px;
+            font-size: 14px;
+            color: #cbd5e1;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #0b1220;
+            color: white;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #00e5ff;
+            box-shadow: 0 0 6px rgba(0, 229, 255, 0.25);
+        }
+
+        button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #00e5ff;
+            color: #061018;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #67efff;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #message {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 22px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        a {
+            color: #00e5ff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="logo">HandoffHub</div>
+    <div class="subtitle">Create your account to get started</div>
+
+    <form id="registerForm">
+        <label for="name">Full Name</label>
+        <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your full name"
+                required
+        >
+
+        <label for="email">Email Address</label>
+        <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="you@example.com"
+                required
+        >
+
+        <label for="password">Password</label>
+        <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="At least 8 characters"
+                minlength="8"
+                required
+        >
+
+        <button type="submit" id="registerButton">
+            Create Account
+        </button>
+    </form>
+
+    <div id="message" role="status" aria-live="polite"></div>
+
+    <div class="login-link">
+        Already have an account?
+        <a href="/login.html">Sign in</a>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById("registerForm");
+    const message = document.getElementById("message");
+    const button = document.getElementById("registerButton");
+
+    form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        message.textContent = "";
+        button.disabled = true;
+        button.textContent = "Creating account...";
+
+        const user = {
+            name: document.getElementById("name").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            password: document.getElementById("password").value
+        };
+
+        try {
+            const response = await fetch("/api/users/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(user)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    result.error || "Registration failed. Please try again."
+                );
+            }
+
+            message.style.color = "#4ade80";
+            message.textContent =
+                "Account created successfully! Redirecting to login...";
+
+            form.reset();
+
+            setTimeout(function () {
+                window.location.href = "/login.html";
+            }, 1500);
+
+        } catch (error) {
+            message.style.color = "#fb7185";
+            message.textContent =
+                error.message || "Could not connect to the server.";
+        } finally {
+            button.disabled = false;
+            button.textContent = "Create Account";
+        }
+    });
+</script>
+</body>
+</html>

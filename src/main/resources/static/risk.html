@@ -1,0 +1,516 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HandoffHub - Knowledge Risk</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: #080b14;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        .layout { display: flex; min-height: 100vh; }
+
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            background: #0d111d;
+            border-right: 1px solid #20283a;
+            padding: 28px 18px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00e5ff;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            font-size: 12px;
+            color: #6f7a90;
+            margin-bottom: 35px;
+            line-height: 1.5;
+        }
+
+        .nav-title {
+            color: #59657a;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 12px 10px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 13px 14px;
+            margin-bottom: 6px;
+            border-radius: 10px;
+            color: #9ca7bb;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #101d2d;
+            color: #00e5ff;
+            box-shadow: inset 2px 0 0 #00e5ff;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 35px 40px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .welcome h1 { margin: 0; font-size: 30px; }
+
+        .welcome p {
+            margin-top: 8px;
+            color: #7f8ba0;
+            line-height: 1.5;
+        }
+
+        .profile {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00e5ff, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .selector-card, .card {
+            background: linear-gradient(145deg, #101624, #0d121e);
+            border: 1px solid #202b3e;
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .selector-card { margin-bottom: 22px; }
+
+        .selector-label {
+            display: block;
+            color: #9ca7bb;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        select {
+            width: 100%;
+            max-width: 650px;
+            padding: 13px 14px;
+            color: #fff;
+            background: #080d18;
+            border: 1px solid #344158;
+            border-radius: 9px;
+            font-size: 14px;
+        }
+
+        select:focus {
+            outline: 1px solid #00e5ff;
+            border-color: #00e5ff;
+        }
+
+        .risk-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .card { min-width: 0; }
+
+        .card:hover {
+            border-color: #00e5ff;
+            box-shadow: 0 0 25px rgba(0,229,255,.08);
+        }
+
+        .card-title { font-size: 18px; margin-bottom: 20px; }
+
+        .risk-level, .score {
+            font-size: 38px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .risk-level { color: #f59e0b; }
+        .risk-level.high { color: #f87171; }
+        .risk-level.medium { color: #fbbf24; }
+        .risk-level.low { color: #22c55e; }
+        .score { color: #00e5ff; }
+
+        .description {
+            color: #7f8ba0;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .progress {
+            height: 10px;
+            background: #1b2434;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 18px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: #22c55e;
+            border-radius: 10px;
+            transition: width .3s ease;
+        }
+
+        .info {
+            margin-top: 12px;
+            padding: 15px;
+            background: #111827;
+            border-radius: 10px;
+            color: #9ca7bb;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .info strong { color: #e5e7eb; }
+
+        .message {
+            margin-top: 18px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            background: #111827;
+            color: #9ca7bb;
+            line-height: 1.6;
+        }
+
+        .message.error { color: #fca5a5; }
+        .message[hidden] { display: none; }
+
+        .refresh-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .refresh-button {
+            padding: 10px 15px;
+            background: #102431;
+            color: #00e5ff;
+            border: 1px solid #235366;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .refresh-button:hover { background: #163446; }
+
+        @media (max-width: 900px) {
+            .main { padding: 25px 20px; }
+            .sidebar { width: 200px; }
+            .risk-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 600px) {
+            .layout { flex-direction: column; }
+            .sidebar { width: 100%; padding: 18px; }
+            .tagline { margin-bottom: 15px; }
+            .nav-title { margin-top: 12px; }
+            .main { padding: 22px 16px; }
+            .welcome h1 { font-size: 25px; }
+            .refresh-row { align-items: flex-start; flex-direction: column; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="logo">HandoffHub</div>
+        <div class="tagline">Knowledge shouldn't leave with people.</div>
+
+        <div class="nav-title">Workspace</div>
+        <a href="/dashboard.html" class="nav-item">Dashboard</a>
+        <a href="/projects.html" class="nav-item">Projects</a>
+        <a href="/handovers.html" class="nav-item">Handovers</a>
+        <a href="/tasks.html" class="nav-item">Tasks</a>
+        <a href="/issues.html" class="nav-item">Issues</a>
+        <a href="/knowledge.html" class="nav-item">Knowledge</a>
+        <a href="/risk.html" class="nav-item active">Risk</a>
+
+        <div class="nav-title">System</div>
+        <a href="/activity.html" class="nav-item">Activity</a>
+        <a href="/profile.html" class="nav-item">Profile</a>
+    </aside>
+
+    <main class="main">
+        <div class="topbar">
+            <div class="welcome">
+                <h1>Knowledge Risk</h1>
+                <p>Identify potential knowledge loss before it becomes a problem.</p>
+            </div>
+            <div class="profile" aria-label="Profile">AU</div>
+        </div>
+
+        <section class="selector-card">
+            <label class="selector-label" for="handoverSelect">
+                Select a handover to analyze
+            </label>
+            <select id="handoverSelect" disabled>
+                <option value="">Loading handovers...</option>
+            </select>
+            <div id="message" class="message" role="status" aria-live="polite">
+                Loading handovers and risk information...
+            </div>
+        </section>
+
+        <div class="refresh-row">
+            <div class="description" id="selectedHandoverLabel">
+                Select a handover to view its analysis.
+            </div>
+            <button type="button" class="refresh-button" id="refreshButton">
+                Refresh data
+            </button>
+        </div>
+
+        <div class="risk-grid">
+            <section class="card">
+                <div class="card-title">Current Risk Level</div>
+                <div id="riskLevel" class="risk-level">—</div>
+                <div id="riskDescription" class="description">
+                    Risk information will appear here.
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="card-title">Handover Readiness</div>
+                <div id="readinessScore" class="score">—</div>
+                <div id="readinessDescription" class="description">
+                    Readiness is calculated by the backend.
+                </div>
+                <div class="progress" role="progressbar"
+                     aria-label="Handover readiness" aria-valuemin="0"
+                     aria-valuemax="100" aria-valuenow="0" id="progress">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="card-title">Risk Analysis</div>
+                <div class="info"><strong>Project:</strong> <span id="projectName">—</span></div>
+                <div class="info"><strong>Knowledge Records:</strong> <span id="knowledgeCount">—</span></div>
+                <div class="info"><strong>Issues Recorded:</strong> <span id="issueCount">—</span></div>
+                <div class="info"><strong>Open Issues:</strong> <span id="openIssueCount">—</span></div>
+                <div class="info"><strong>Pending Tasks:</strong> <span id="pendingTaskCount">—</span></div>
+            </section>
+
+            <section class="card">
+                <div class="card-title">Recommendation</div>
+                <div id="recommendation" class="description">
+                    Recommendations will appear after analysis.
+                </div>
+            </section>
+        </div>
+    </main>
+</div>
+
+<script>
+    const handoverSelect = document.getElementById("handoverSelect");
+    const message = document.getElementById("message");
+
+    function showMessage(text, isError = false) {
+        message.textContent = text;
+        message.classList.toggle("error", isError);
+        message.hidden = !text;
+    }
+
+    function setText(id, value) {
+        document.getElementById(id).textContent = value;
+    }
+
+    function setCount(id, value) {
+        const number = Number(value);
+        setText(id, Number.isFinite(number) ? String(number) : "0");
+    }
+
+    function clearAnalysis() {
+        setText("riskLevel", "—");
+        document.getElementById("riskLevel").className = "risk-level";
+        setText("riskDescription", "Risk information will appear here.");
+        setText("readinessScore", "—");
+        setText("readinessDescription", "Readiness is calculated by the backend.");
+        document.getElementById("progressBar").style.width = "0%";
+        document.getElementById("progress").setAttribute("aria-valuenow", "0");
+        setText("projectName", "—");
+        setText("knowledgeCount", "—");
+        setText("issueCount", "—");
+        setText("openIssueCount", "—");
+        setText("pendingTaskCount", "—");
+        setText("recommendation", "Recommendations will appear after analysis.");
+        setText("selectedHandoverLabel", "Select a handover to view its analysis.");
+    }
+
+    async function getJson(url) {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error("Request failed (HTTP " + response.status + "): " + url);
+        }
+        return response.json();
+    }
+
+    async function loadHandovers() {
+        handoverSelect.disabled = true;
+        showMessage("Loading handovers...");
+
+        try {
+            const handovers = await getJson("/api/handovers");
+            handoverSelect.innerHTML = "";
+
+            if (!Array.isArray(handovers) || handovers.length === 0) {
+                handoverSelect.add(new Option("No handovers available", ""));
+                clearAnalysis();
+                showMessage("Create a handover first to view its risk analysis.");
+                return;
+            }
+
+            handovers.forEach(handover => {
+                const title = handover.title || handover.name ||
+                    ("Handover #" + handover.id);
+                const project = handover.project?.name || "No project";
+                const status = handover.status || "UNKNOWN";
+
+                handoverSelect.add(new Option(
+                    title + " — " + project + " (" + status + ")",
+                    String(handover.id)
+                ));
+            });
+
+            handoverSelect.disabled = false;
+
+            const preferred = handovers.find(h => String(h.id) === "2") || handovers[0];
+            handoverSelect.value = String(preferred.id);
+            await loadSelectedHandover();
+        } catch (error) {
+            clearAnalysis();
+            showMessage(error.message || "Unable to load handovers.", true);
+        }
+    }
+
+    async function loadSelectedHandover() {
+        const id = handoverSelect.value;
+
+        if (!id) {
+            clearAnalysis();
+            return;
+        }
+
+        showMessage("Loading risk analysis...");
+        clearAnalysis();
+
+        try {
+            const encodedId = encodeURIComponent(id);
+
+            const [handover, risk, readiness] = await Promise.all([
+                getJson("/api/handovers/" + encodedId),
+                getJson("/api/knowledge-risk/" + encodedId),
+                getJson("/api/handovers/" + encodedId + "/readiness-score")
+            ]);
+
+            setText("selectedHandoverLabel",
+                (handover.title || handover.name || ("Handover #" + handover.id)) +
+                " · Status: " + (handover.status || "UNKNOWN"));
+
+            setText("projectName", handover.project?.name || "No project assigned");
+            setCount("knowledgeCount", risk.knowledgeRecords);
+            setCount("issueCount", risk.issuesRecorded);
+            setCount("openIssueCount", risk.openIssues);
+            setCount("pendingTaskCount", risk.pendingTasks);
+
+            const riskLevel = String(risk.riskLevel || "UNKNOWN").toUpperCase();
+            const riskElement = document.getElementById("riskLevel");
+            riskElement.textContent = riskLevel;
+            riskElement.className = "risk-level " +
+                (["HIGH", "MEDIUM", "LOW"].includes(riskLevel)
+                    ? riskLevel.toLowerCase() : "");
+
+            const riskDescriptions = {
+                HIGH: "The backend identifies a high risk of knowledge loss. Review documentation, open issues, and pending tasks.",
+                MEDIUM: "Some outstanding tasks, open issues, or limited documented knowledge may require attention.",
+                LOW: "The recorded indicators suggest lower risk. Continue maintaining clear documentation."
+            };
+
+            setText("riskDescription",
+                riskDescriptions[riskLevel] ||
+                "The backend returned an unrecognized risk level.");
+
+            const scoreValue = Number(readiness);
+            if (Number.isFinite(scoreValue)) {
+                const score = Math.max(0, Math.min(100, scoreValue));
+                setText("readinessScore", score + "%");
+                setText("readinessDescription",
+                    "Readiness score returned by the backend: " + score + "%.");
+                document.getElementById("progressBar").style.width = score + "%";
+                document.getElementById("progress").setAttribute("aria-valuenow", String(score));
+            } else {
+                setText("readinessScore", "Unavailable");
+                setText("readinessDescription",
+                    "The readiness endpoint did not return a valid numeric score.");
+            }
+
+            const knowledgeCount = Number(risk.knowledgeRecords) || 0;
+            const openIssues = Number(risk.openIssues) || 0;
+            const pendingTasks = Number(risk.pendingTasks) || 0;
+
+            let recommendation;
+            if (riskLevel === "HIGH") {
+                recommendation =
+                    "Review this handover carefully. Document missing technical knowledge, " +
+                    "resolve or assign outstanding issues, and ensure pending responsibilities " +
+                    "have clear owners.";
+            } else if (riskLevel === "MEDIUM") {
+                recommendation =
+                    "Review the " + openIssues + " open issue(s) and " + pendingTasks +
+                    " pending task(s). Keep important technical documentation up to date.";
+            } else {
+                recommendation =
+                    "Continue maintaining technical documentation and monitor new issues " +
+                    "and pending tasks.";
+            }
+
+            if (knowledgeCount === 0) {
+                recommendation +=
+                    " No knowledge records are attached to this handover; add the essential technical and operational knowledge.";
+            }
+
+            setText("recommendation", recommendation);
+            showMessage("Risk analysis loaded successfully.");
+        } catch (error) {
+            showMessage(error.message || "Unable to load this handover's analysis.", true);
+        }
+    }
+
+    handoverSelect.addEventListener("change", loadSelectedHandover);
+    document.getElementById("refreshButton").addEventListener("click", loadHandovers);
+
+    loadHandovers();
+</script>
+</body>
+</html>

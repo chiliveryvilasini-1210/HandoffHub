@@ -1,0 +1,681 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HandoffHub | Tasks</title>
+
+    <style>
+        :root {
+            --bg: #080b14;
+            --sidebar: #0d111d;
+            --panel: #101624;
+            --panel-light: #172238;
+            --cyan: #00e5ff;
+            --text: #edf5ff;
+            --muted: #91a3bd;
+            --border: #26364f;
+            --green: #38e8a5;
+            --red: #ff647c;
+            --yellow: #ffcf70;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Arial, sans-serif;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            min-height: 100vh;
+            flex-shrink: 0;
+            background: var(--sidebar);
+            border-right: 1px solid #20283a;
+            padding: 28px 18px;
+        }
+
+        .logo {
+            color: var(--cyan);
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            color: #6f7a90;
+            font-size: 12px;
+            line-height: 1.5;
+            margin-bottom: 35px;
+        }
+
+        .nav-title {
+            color: #59657a;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 12px 10px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 13px 14px;
+            margin-bottom: 6px;
+            border-radius: 10px;
+            color: #9ca7bb;
+            text-decoration: none;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #101d2d;
+            color: var(--cyan);
+            box-shadow: inset 2px 0 0 var(--cyan);
+        }
+
+        /* MAIN CONTENT */
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 35px 40px;
+        }
+
+        .topbar { margin-bottom: 28px; }
+
+        .eyebrow {
+            color: var(--cyan);
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 10px 0;
+            font-size: clamp(28px, 4vw, 38px);
+        }
+
+        .subtitle {
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 15px;
+            margin: 28px 0;
+        }
+
+        .stat, .toolbar, .task-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+        }
+
+        .stat { padding: 20px; }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .stat-number {
+            margin-top: 10px;
+            font-size: 30px;
+            font-weight: 750;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: end;
+            gap: 14px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .field { flex: 1; min-width: 150px; }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #0b1321;
+            color: var(--text);
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--cyan);
+        }
+
+        button {
+            padding: 11px 16px;
+            border: 1px solid var(--cyan);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--cyan);
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover { background: #06303b; }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .task-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .task-card {
+            padding: 22px;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .task-card:hover {
+            border-color: #087f96;
+            transform: translateY(-2px);
+        }
+
+        .task-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .task-title {
+            margin: 0 0 12px;
+            font-size: 19px;
+            overflow-wrap: anywhere;
+        }
+
+        .description {
+            min-height: 42px;
+            color: var(--muted);
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 18px 0;
+        }
+
+        .pill {
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .pending { color: var(--yellow); }
+        .completed { color: var(--green); }
+        .high { color: var(--red); }
+        .medium { color: var(--yellow); }
+        .low { color: var(--green); }
+
+        .task-meta {
+            display: grid;
+            gap: 10px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .task-meta strong {
+            color: var(--text);
+            overflow-wrap: anywhere;
+        }
+
+        .task-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .empty, .message {
+            padding: 28px;
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+            color: var(--muted);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .message { margin-bottom: 18px; }
+        .message.error { color: var(--red); border-color: var(--red); }
+        .message.success { color: var(--green); border-color: var(--green); }
+        .hidden { display: none; }
+
+        footer {
+            padding: 30px 15px;
+            color: var(--muted);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        @media (max-width: 1000px) {
+            .main { padding: 28px 24px; }
+            .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .task-list { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 760px) {
+            .layout { display: block; }
+
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+                padding: 20px;
+            }
+
+            .main {
+                padding: 25px 20px;
+            }
+
+            .toolbar { align-items: stretch; }
+            .field { min-width: 100%; }
+        }
+
+        @media (max-width: 450px) {
+            .stats { gap: 10px; }
+            .stat { padding: 15px; }
+            .stat-number { font-size: 25px; }
+            .task-card { padding: 17px; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">HandoffHub</div>
+        <div class="tagline">Knowledge shouldn't leave with people.</div>
+
+        <div class="nav-title">Workspace</div>
+
+        <a href="/dashboard.html" class="nav-item">Dashboard</a>
+        <a href="/projects.html" class="nav-item">Projects</a>
+        <a href="/handovers.html" class="nav-item">Handovers</a>
+        <a href="/tasks.html" class="nav-item active">Tasks</a>
+        <a href="/issues.html" class="nav-item">Issues</a>
+        <a href="/knowledge.html" class="nav-item">Knowledge</a>
+        <a href="/risk.html" class="nav-item">Risk</a>
+
+        <div class="nav-title">System</div>
+
+        <a href="/activity.html" class="nav-item">Activity</a>
+        <a href="/profile.html" class="nav-item">Profile</a>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+        <header class="topbar">
+            <p class="eyebrow">Responsibility Management</p>
+            <h1>Task Center</h1>
+            <p class="subtitle">
+                Track responsibilities, monitor deadlines, and complete tasks
+                to keep every handover moving forward.
+            </p>
+        </header>
+
+        <section class="stats">
+            <div class="stat">
+                <div class="stat-label">Total Tasks</div>
+                <div class="stat-number" id="totalCount">—</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Pending</div>
+                <div class="stat-number pending" id="pendingCount">—</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Completed</div>
+                <div class="stat-number completed" id="completedCount">—</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Overdue</div>
+                <div class="stat-number high" id="overdueCount">—</div>
+            </div>
+        </section>
+
+        <div id="message" class="message hidden" role="status" aria-live="polite"></div>
+
+        <section class="toolbar">
+            <div class="field">
+                <label for="searchInput">SEARCH TASKS</label>
+                <input id="searchInput" type="search" placeholder="Search title or description">
+            </div>
+
+            <div class="field">
+                <label for="statusFilter">STATUS</label>
+                <select id="statusFilter">
+                    <option value="ALL">All statuses</option>
+                    <option value="PENDING">Pending</option>
+                    <option value="COMPLETED">Completed</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="priorityFilter">PRIORITY</label>
+                <select id="priorityFilter">
+                    <option value="ALL">All priorities</option>
+                    <option value="HIGH">High</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="LOW">Low</option>
+                </select>
+            </div>
+
+            <button id="refreshButton" type="button">↻ Refresh</button>
+        </section>
+
+        <div id="taskList" class="task-list">
+            <div class="empty">Loading tasks...</div>
+        </div>
+    </main>
+</div>
+
+<footer>HandoffHub · Structured Knowledge & Responsibility Handover</footer>
+
+<script>
+    const taskList = document.getElementById("taskList");
+    const messageBox = document.getElementById("message");
+    const searchInput = document.getElementById("searchInput");
+    const statusFilter = document.getElementById("statusFilter");
+    const priorityFilter = document.getElementById("priorityFilter");
+    const refreshButton = document.getElementById("refreshButton");
+
+    let allTasks = [];
+
+    function showMessage(text, type) {
+        messageBox.textContent = text;
+        messageBox.className = "message " + type;
+    }
+
+    function clearMessage() {
+        messageBox.textContent = "";
+        messageBox.className = "message hidden";
+    }
+
+    function normalized(value) {
+        return String(value ?? "").trim().toUpperCase();
+    }
+
+    function isCompleted(task) {
+        const status = normalized(task.status);
+        return status === "COMPLETED" || status === "DONE";
+    }
+
+    function isOverdue(task) {
+        if (isCompleted(task) || !task.dueDate) return false;
+
+        const today = new Date();
+        const localToday = [
+            today.getFullYear(),
+            String(today.getMonth() + 1).padStart(2, "0"),
+            String(today.getDate()).padStart(2, "0")
+        ].join("-");
+
+        return String(task.dueDate).slice(0, 10) < localToday;
+    }
+
+    function escapeHTML(value) {
+        return String(value ?? "").replace(/[&<>"']/g, character => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        })[character]);
+    }
+
+    function handoverName(task) {
+        const handover = task.handover;
+
+        if (!handover) {
+            return "Handover #" + (task.handoverId ?? "—");
+        }
+
+        return handover.title
+            || handover.name
+            || handover.handoverTitle
+            || ("Handover #" + (handover.id ?? "—"));
+    }
+
+    function updateStats() {
+        document.getElementById("totalCount").textContent = allTasks.length;
+        document.getElementById("pendingCount").textContent =
+            allTasks.filter(task => !isCompleted(task)).length;
+        document.getElementById("completedCount").textContent =
+            allTasks.filter(isCompleted).length;
+        document.getElementById("overdueCount").textContent =
+            allTasks.filter(isOverdue).length;
+    }
+
+    function renderTasks() {
+        const searchTerm = searchInput.value.trim().toLowerCase();
+        const selectedStatus = statusFilter.value;
+        const selectedPriority = priorityFilter.value;
+
+        const filtered = allTasks.filter(task => {
+            const searchable = [
+                task.title,
+                task.description,
+                handoverName(task)
+            ].join(" ").toLowerCase();
+
+            const statusMatches =
+                selectedStatus === "ALL"
+                || (selectedStatus === "COMPLETED"
+                    ? isCompleted(task)
+                    : !isCompleted(task));
+
+            const priorityMatches =
+                selectedPriority === "ALL"
+                || normalized(task.priority) === selectedPriority;
+
+            return searchable.includes(searchTerm)
+                && statusMatches
+                && priorityMatches;
+        });
+
+        if (filtered.length === 0) {
+            taskList.innerHTML = `
+                <div class="empty" style="grid-column:1/-1">
+                    No matching tasks found. Try another filter or refresh the data.
+                </div>`;
+            return;
+        }
+
+        taskList.innerHTML = filtered.map(task => {
+            const completed = isCompleted(task);
+            const priority = normalized(task.priority) || "UNASSIGNED";
+            const status = completed ? "COMPLETED" : "PENDING";
+            const overdue = isOverdue(task);
+
+            return `
+                <article class="task-card">
+                    <div class="task-top">
+                        <div>
+                            <h2 class="task-title">${escapeHTML(task.title || "Untitled task")}</h2>
+                        </div>
+                        <span class="pill ${completed ? "completed" : "pending"}">
+                            ${status}
+                        </span>
+                    </div>
+
+                    <p class="description">
+                        ${escapeHTML(task.description || "No description provided.")}
+                    </p>
+
+                    <div class="pills">
+                        <span class="pill ${escapeHTML(priority.toLowerCase())}">
+                            ${escapeHTML(priority)} PRIORITY
+                        </span>
+                        ${overdue ? '<span class="pill high">OVERDUE</span>' : ""}
+                    </div>
+
+                    <div class="task-meta">
+                        <div>Handover: <strong>${escapeHTML(handoverName(task))}</strong></div>
+                        <div>Task ID: <strong>#${escapeHTML(task.id)}</strong></div>
+                        <div>Due date: <strong>${escapeHTML(task.dueDate || "Not set")}</strong></div>
+                    </div>
+
+                    <div class="task-actions">
+                        <span class="${completed ? "completed" : "pending"}">
+                            ${completed ? "✓ Responsibility completed" : "◷ Awaiting completion"}
+                        </span>
+                        ${completed ? "" : `
+                            <button type="button" data-complete-id="${escapeHTML(task.id)}">
+                                Mark Complete
+                            </button>`}
+                    </div>
+                </article>`;
+        }).join("");
+    }
+
+    async function loadTasks() {
+        clearMessage();
+        refreshButton.disabled = true;
+        taskList.innerHTML = '<div class="empty">Loading tasks...</div>';
+
+        try {
+            const response = await fetch("/api/tasks", {
+                method: "GET",
+                credentials: "same-origin",
+                headers: { "Accept": "application/json" }
+            });
+
+            if (response.status === 401 || response.status === 403) {
+                throw new Error("Please log in with an authorized HandoffHub account to view tasks.");
+            }
+
+            if (!response.ok) {
+                throw new Error("Could not load tasks. Server returned HTTP " + response.status + ".");
+            }
+
+            const data = await response.json();
+
+            if (!Array.isArray(data)) {
+                throw new Error("The tasks API did not return a task list.");
+            }
+
+            allTasks = data;
+            updateStats();
+            renderTasks();
+
+            if (allTasks.length === 0) {
+                showMessage("No tasks are currently available.", "success");
+            }
+        } catch (error) {
+            taskList.innerHTML = `
+                <div class="empty" style="grid-column:1/-1">
+                    ${escapeHTML(error.message)}
+                </div>`;
+            showMessage(error.message, "error");
+        } finally {
+            refreshButton.disabled = false;
+        }
+    }
+
+    async function completeTask(taskId, button) {
+        if (!window.confirm("Mark task #" + taskId + " as completed?")) {
+            return;
+        }
+
+        button.disabled = true;
+        clearMessage();
+
+        try {
+            const response = await fetch(
+                "/api/tasks/" + encodeURIComponent(taskId) + "/complete",
+                {
+                    method: "PUT",
+                    credentials: "same-origin",
+                    headers: { "Accept": "application/json" }
+                }
+            );
+
+            if (response.status === 401 || response.status === 403) {
+                throw new Error(
+                    "Completion was denied. Check your login permissions and server security settings."
+                );
+            }
+
+            if (!response.ok) {
+                let details = "";
+
+                try {
+                    const body = await response.json();
+                    details = body.message || body.error || "";
+                } catch (_) {}
+
+                throw new Error(
+                    details || "Could not complete the task. HTTP " + response.status + "."
+                );
+            }
+
+            showMessage(
+                "Task #" + taskId + " marked as completed successfully.",
+                "success"
+            );
+
+            await loadTasks();
+        } catch (error) {
+            showMessage(error.message, "error");
+            button.disabled = false;
+        }
+    }
+
+    taskList.addEventListener("click", event => {
+        const button = event.target.closest("[data-complete-id]");
+        if (!button) return;
+
+        completeTask(button.dataset.completeId, button);
+    });
+
+    searchInput.addEventListener("input", renderTasks);
+    statusFilter.addEventListener("change", renderTasks);
+    priorityFilter.addEventListener("change", renderTasks);
+    refreshButton.addEventListener("click", loadTasks);
+
+    loadTasks();
+</script>
+</body>
+</html>

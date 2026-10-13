@@ -1,0 +1,491 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Handover | HandoffHub</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #080d18;
+            color: #eaf2ff;
+        }
+
+        header {
+            padding: 22px 7%;
+            border-bottom: 1px solid #1c2b40;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: #42e8f5;
+        }
+
+        nav {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #aabbd2;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            color: #42e8f5;
+        }
+
+        main {
+            width: min(720px, 92%);
+            margin: 45px auto;
+        }
+
+        .subtitle {
+            color: #92a4bd;
+            line-height: 1.6;
+        }
+
+        .form-card {
+            margin-top: 25px;
+            padding: 30px;
+            background: #101a2b;
+            border: 1px solid #233750;
+            border-radius: 16px;
+            box-shadow: 0 0 30px #00d9ff0a;
+        }
+
+        label {
+            display: block;
+            margin: 20px 0 8px;
+            color: #c9d8ec;
+            font-size: 14px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 13px;
+            border-radius: 8px;
+            border: 1px solid #30445f;
+            background: #091321;
+            color: #eef7ff;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: #42e8f5;
+            box-shadow: 0 0 0 2px #42e8f51a;
+        }
+
+        textarea {
+            min-height: 115px;
+            resize: vertical;
+        }
+
+        select:disabled {
+            opacity: 0.65;
+            cursor: wait;
+        }
+
+        .hint {
+            margin-top: 7px;
+            color: #8296b1;
+            font-size: 12px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #42e8f5;
+            color: #07111d;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #80f2fa;
+        }
+
+        button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .message {
+            display: none;
+            margin-top: 18px;
+            padding: 13px;
+            border-radius: 8px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .success {
+            display: block;
+            color: #8fffc1;
+            background: #123526;
+            border: 1px solid #246647;
+        }
+
+        .error {
+            display: block;
+            color: #ffaaaa;
+            background: #381b25;
+            border: 1px solid #743242;
+        }
+
+        .loading {
+            color: #f5d58b;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 22px;
+            color: #42e8f5;
+            text-decoration: none;
+        }
+
+        @media (max-width: 550px) {
+            .form-card {
+                padding: 20px;
+            }
+
+            header {
+                padding: 20px 5%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <div class="brand">HandoffHub</div>
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="handovers.html">Handovers</a>
+        <a href="create-handover.html">Create Handover</a>
+    </nav>
+</header>
+
+<main>
+    <h1>Create a Handover</h1>
+    <p class="subtitle">
+        Transfer project knowledge and responsibilities through a structured handover.
+        New handovers start as drafts.
+    </p>
+
+    <section class="form-card">
+        <form id="handoverForm">
+            <label for="title">Handover Title *</label>
+            <input
+                    id="title"
+                    name="title"
+                    type="text"
+                    maxlength="150"
+                    placeholder="e.g. Payment Module Handover"
+                    required
+            >
+
+            <label for="description">Description *</label>
+            <textarea
+                    id="description"
+                    name="description"
+                    maxlength="2000"
+                    placeholder="Describe the knowledge and responsibilities being transferred..."
+                    required
+            ></textarea>
+
+            <label for="projectId">Project *</label>
+            <select id="projectId" name="projectId" required disabled>
+                <option value="">Loading projects...</option>
+            </select>
+
+            <label for="fromUserId">From User (Sender) *</label>
+            <select id="fromUserId" name="fromUserId" required disabled>
+                <option value="">Loading users...</option>
+            </select>
+
+            <label for="toUserId">To User (Receiver) *</label>
+            <select id="toUserId" name="toUserId" required disabled>
+                <option value="">Loading users...</option>
+            </select>
+
+            <p class="hint">
+                Choose the existing project, sender and receiver from the lists.
+                The handover will be saved with DRAFT status.
+            </p>
+
+            <button type="submit" id="submitButton" disabled>
+                Create Handover
+            </button>
+
+            <div id="message" class="message" role="status" aria-live="polite"></div>
+        </form>
+    </section>
+
+    <a class="back-link" href="handovers.html">← Back to Handovers</a>
+</main>
+
+<script>
+    const form = document.getElementById("handoverForm");
+    const projectSelect = document.getElementById("projectId");
+    const fromUserSelect = document.getElementById("fromUserId");
+    const toUserSelect = document.getElementById("toUserId");
+    const submitButton = document.getElementById("submitButton");
+    const messageBox = document.getElementById("message");
+
+    let projectsLoaded = false;
+    let usersLoaded = false;
+
+    function showMessage(text, type) {
+        messageBox.textContent = text;
+        messageBox.className = "message " + type;
+    }
+
+    function clearMessage() {
+        messageBox.textContent = "";
+        messageBox.className = "message";
+    }
+
+    async function readError(response) {
+        try {
+            const data = await response.json();
+
+            if (data.message) return data.message;
+            if (data.error) return data.error;
+            if (data.detail) return data.detail;
+
+            return JSON.stringify(data);
+        } catch {
+            try {
+                return await response.text();
+            } catch {
+                return "Request failed with status " + response.status;
+            }
+        }
+    }
+
+    function addOptions(select, items, getId, getLabel, placeholder) {
+        select.replaceChildren();
+
+        const firstOption = document.createElement("option");
+        firstOption.value = "";
+        firstOption.textContent = placeholder;
+        select.appendChild(firstOption);
+
+        items.forEach(item => {
+            const option = document.createElement("option");
+            option.value = String(getId(item));
+            option.textContent = getLabel(item);
+            select.appendChild(option);
+        });
+
+        select.disabled = items.length === 0;
+    }
+
+    async function loadProjects() {
+        try {
+            const response = await fetch("/api/projects");
+
+            if (!response.ok) {
+                throw new Error(await readError(response));
+            }
+
+            const projects = await response.json();
+
+            addOptions(
+                projectSelect,
+                projects,
+                project => project.id,
+                project => project.name || ("Project #" + project.id),
+                projects.length ? "Select a project" : "No projects found"
+            );
+
+            projectsLoaded = projects.length > 0;
+        } catch (error) {
+            projectSelect.replaceChildren();
+            const option = document.createElement("option");
+            option.value = "";
+            option.textContent = "Unable to load projects";
+            projectSelect.appendChild(option);
+            projectSelect.disabled = true;
+            showMessage("Could not load projects: " + error.message, "error");
+        }
+
+        updateSubmitButton();
+    }
+
+    async function loadUsers() {
+        try {
+            const response = await fetch("/api/users");
+
+            if (!response.ok) {
+                throw new Error(await readError(response));
+            }
+
+            const users = await response.json();
+
+            const validUsers = users.filter(
+                user => user.id != null
+            );
+
+            const labelForUser = user =>
+                (user.name || ("User #" + user.id)) +
+                (user.email ? " (" + user.email + ")" : "") +
+                (user.role ? " — " + user.role : "");
+
+            addOptions(
+                fromUserSelect,
+                validUsers,
+                user => user.id,
+                labelForUser,
+                validUsers.length ? "Select sender" : "No users found"
+            );
+
+            addOptions(
+                toUserSelect,
+                validUsers,
+                user => user.id,
+                labelForUser,
+                validUsers.length ? "Select receiver" : "No users found"
+            );
+
+            usersLoaded = validUsers.length > 0;
+        } catch (error) {
+            for (const select of [fromUserSelect, toUserSelect]) {
+                select.replaceChildren();
+                const option = document.createElement("option");
+                option.value = "";
+                option.textContent = "Unable to load users";
+                select.appendChild(option);
+                select.disabled = true;
+            }
+
+            showMessage("Could not load users: " + error.message, "error");
+        }
+
+        updateSubmitButton();
+    }
+
+    function updateSubmitButton() {
+        submitButton.disabled = !(projectsLoaded && usersLoaded);
+    }
+
+    form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        clearMessage();
+
+        if (!form.reportValidity()) return;
+
+        const projectId = Number(projectSelect.value);
+        const fromUserId = Number(fromUserSelect.value);
+        const toUserId = Number(toUserSelect.value);
+
+        if (!projectId || !fromUserId || !toUserId) {
+            showMessage(
+                "Please select a project, sender and receiver.",
+                "error"
+            );
+            return;
+        }
+
+        if (fromUserId === toUserId) {
+            showMessage(
+                "Sender and receiver must be different users.",
+                "error"
+            );
+            return;
+        }
+
+        const handoverData = {
+            title: document.getElementById("title").value.trim(),
+            description: document.getElementById("description").value.trim(),
+            status: "DRAFT",
+            readinessScore: 0,
+            project: { id: projectId },
+            fromUser: { id: fromUserId },
+            toUser: { id: toUserId }
+        };
+
+        if (!handoverData.title || !handoverData.description) {
+            showMessage(
+                "Please enter both a title and a description.",
+                "error"
+            );
+            return;
+        }
+
+        submitButton.disabled = true;
+        submitButton.textContent = "Creating...";
+
+        try {
+            const response = await fetch("/api/handovers", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(handoverData)
+            });
+
+            if (!response.ok) {
+                throw new Error(await readError(response));
+            }
+
+            const created = await response.json();
+
+            showMessage(
+                "Handover created successfully! ID: " +
+                (created.id ?? "Created") +
+                ". Status: " + (created.status || "DRAFT") +
+                ". You can now view it in Handovers.",
+                "success"
+            );
+
+            form.reset();
+
+            if (created.id != null) {
+                const link = document.createElement("a");
+                link.href = "handover-details.html?id=" +
+                    encodeURIComponent(created.id);
+                link.textContent = " View Handover Details";
+                link.style.color = "#42e8f5";
+                link.style.display = "inline-block";
+                link.style.marginTop = "10px";
+                messageBox.appendChild(document.createElement("br"));
+                messageBox.appendChild(link);
+            }
+        } catch (error) {
+            showMessage(
+                "Could not create handover: " + error.message,
+                "error"
+            );
+        } finally {
+            submitButton.textContent = "Create Handover";
+            updateSubmitButton();
+        }
+    });
+
+    loadProjects();
+    loadUsers();
+</script>
+</body>
+</html>

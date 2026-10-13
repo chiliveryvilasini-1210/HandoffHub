@@ -1,0 +1,585 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issues | HandoffHub</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            background: #080d18;
+            color: #e5edf8;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 235px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 28px 18px;
+            background: #0c1424;
+            border-right: 1px solid #1c2b43;
+        }
+
+        .logo {
+            color: #36e4ff;
+            font-size: 25px;
+            font-weight: 800;
+            margin-bottom: 35px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 13px 15px;
+            margin: 7px 0;
+            text-decoration: none;
+            color: #9aabc2;
+            border-radius: 9px;
+            transition: 0.2s;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #13283b;
+            color: #36e4ff;
+        }
+
+        .main {
+            margin-left: 235px;
+            padding: 35px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #91a4bd;
+            font-size: 14px;
+        }
+
+        .button {
+            display: inline-block;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            background: #36e4ff;
+            color: #06121d;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-weight: 700;
+        }
+
+        .button:hover {
+            background: #80efff;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: #101b2d;
+            border: 1px solid #20324a;
+            border-radius: 13px;
+            padding: 22px;
+        }
+
+        .stat-label {
+            color: #9aabc2;
+            font-size: 13px;
+            margin-bottom: 13px;
+        }
+
+        .stat-number {
+            font-size: 30px;
+            font-weight: 750;
+        }
+
+        .cyan {
+            color: #36e4ff;
+        }
+
+        .red {
+            color: #ff647c;
+        }
+
+        .yellow {
+            color: #ffc857;
+        }
+
+        .green {
+            color: #50e3a4;
+        }
+
+        .panel {
+            background: #101b2d;
+            border: 1px solid #20324a;
+            border-radius: 13px;
+            padding: 22px;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+
+        input,
+        select {
+            background: #0a1220;
+            color: #e5edf8;
+            border: 1px solid #293b54;
+            border-radius: 8px;
+            padding: 12px;
+            outline: none;
+        }
+
+        input {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        select {
+            min-width: 145px;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #36e4ff;
+        }
+
+        .issue-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 17px;
+        }
+
+        .issue-card {
+            background: #0b1423;
+            border: 1px solid #23364e;
+            border-radius: 11px;
+            padding: 20px;
+            transition: 0.2s;
+        }
+
+        .issue-card:hover {
+            border-color: #36e4ff;
+            transform: translateY(-2px);
+        }
+
+        .issue-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .issue-title {
+            font-size: 17px;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .issue-id {
+            color: #7f93ad;
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .description {
+            color: #a9b9ce;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 18px;
+            overflow-wrap: anywhere;
+        }
+
+        .meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 9px;
+            font-size: 12px;
+        }
+
+        .badge {
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+            background: #1c2a3e;
+            color: #d8e5f5;
+        }
+
+        .severity-high,
+        .severity-critical {
+            color: #ff8295;
+            background: #3a1d2b;
+        }
+
+        .severity-medium {
+            color: #ffd479;
+            background: #382d1c;
+        }
+
+        .severity-low {
+            color: #5ee9b0;
+            background: #153529;
+        }
+
+        .status-open {
+            color: #ff8295;
+            background: #3a1d2b;
+        }
+
+        .status-in_progress {
+            color: #ffd479;
+            background: #382d1c;
+        }
+
+        .status-resolved,
+        .status-closed {
+            color: #5ee9b0;
+            background: #153529;
+        }
+
+        .handover {
+            color: #9aabc2;
+        }
+
+        .message {
+            text-align: center;
+            color: #91a4bd;
+            padding: 45px 15px;
+        }
+
+        .error {
+            color: #ff8295;
+        }
+
+        @media (max-width: 1000px) {
+            .stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .issue-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #1c2b43;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 16px;
+            }
+
+            .stat-number {
+                font-size: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+    <div class="logo">HandoffHub</div>
+
+    <a href="/" class="nav-item">Dashboard</a>
+    <a href="/projects.html" class="nav-item">Projects</a>
+    <a href="/handovers.html" class="nav-item">Handovers</a>
+    <a href="/tasks.html" class="nav-item">Tasks</a>
+    <a href="/issues.html" class="nav-item active">Issues</a>
+    <a href="/knowledge.html" class="nav-item">Knowledge</a>
+    <a href="/risk.html" class="nav-item">Risk</a>
+    <a href="/activity.html" class="nav-item">Activity</a>
+    <a href="/profile.html" class="nav-item">Profile</a>
+</aside>
+
+<main class="main">
+
+    <div class="header">
+        <div>
+            <h1>Issues</h1>
+            <p class="subtitle">
+                Track, search and monitor issues reported during handovers.
+            </p>
+        </div>
+
+        <!-- Corrected link to your existing file -->
+        <a class="button" href="/add-issue.html">+ Add Issue</a>
+    </div>
+
+    <section class="stats">
+        <div class="stat-card">
+            <div class="stat-label">Total Issues</div>
+            <div class="stat-number cyan" id="totalCount">0</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Open Issues</div>
+            <div class="stat-number red" id="openCount">0</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">High / Critical</div>
+            <div class="stat-number yellow" id="highCount">0</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Resolved / Closed</div>
+            <div class="stat-number green" id="resolvedCount">0</div>
+        </div>
+    </section>
+
+    <section class="panel">
+
+        <div class="toolbar">
+            <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search by issue title or description..."
+                    oninput="renderIssues()"
+            >
+
+            <select id="severityFilter" onchange="renderIssues()">
+                <option value="">All Severities</option>
+                <option value="LOW">Low</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HIGH">High</option>
+                <option value="CRITICAL">Critical</option>
+            </select>
+
+            <select id="statusFilter" onchange="renderIssues()">
+                <option value="">All Statuses</option>
+                <option value="OPEN">Open</option>
+                <option value="IN_PROGRESS">In Progress</option>
+                <option value="RESOLVED">Resolved</option>
+                <option value="CLOSED">Closed</option>
+            </select>
+        </div>
+
+        <div id="issueList" class="issue-list">
+            <div class="message">Loading issues...</div>
+        </div>
+
+    </section>
+</main>
+
+<script>
+    let allIssues = [];
+
+    function escapeHTML(value) {
+        return String(value ?? "").replace(/[&<>"']/g, function (char) {
+            const entities = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            };
+            return entities[char];
+        });
+    }
+
+    function normalize(value) {
+        return String(value ?? "").trim().toUpperCase();
+    }
+
+    function getSeverityClass(severity) {
+        return "severity-" +
+            String(severity || "medium").toLowerCase();
+    }
+
+    function getStatusClass(status) {
+        return "status-" +
+            String(status || "open").toLowerCase();
+    }
+
+    function updateStats(issues) {
+        document.getElementById("totalCount").textContent =
+            issues.length;
+
+        document.getElementById("openCount").textContent =
+            issues.filter(issue =>
+                normalize(issue.status) === "OPEN" ||
+                normalize(issue.status) === "IN_PROGRESS"
+            ).length;
+
+        document.getElementById("highCount").textContent =
+            issues.filter(issue =>
+                ["HIGH", "CRITICAL"].includes(
+                    normalize(issue.severity)
+                )
+            ).length;
+
+        document.getElementById("resolvedCount").textContent =
+            issues.filter(issue =>
+                ["RESOLVED", "CLOSED"].includes(
+                    normalize(issue.status)
+                )
+            ).length;
+    }
+
+    function renderIssues() {
+        const search = document
+            .getElementById("searchInput")
+            .value.trim().toLowerCase();
+
+        const severity = normalize(
+            document.getElementById("severityFilter").value
+        );
+
+        const status = normalize(
+            document.getElementById("statusFilter").value
+        );
+
+        const filtered = allIssues.filter(issue => {
+            const title = String(issue.title || "").toLowerCase();
+            const description = String(
+                issue.description || ""
+            ).toLowerCase();
+
+            const matchesSearch =
+                title.includes(search) ||
+                description.includes(search);
+
+            const matchesSeverity =
+                !severity || normalize(issue.severity) === severity;
+
+            const matchesStatus =
+                !status || normalize(issue.status) === status;
+
+            return matchesSearch &&
+                matchesSeverity &&
+                matchesStatus;
+        });
+
+        const container = document.getElementById("issueList");
+
+        if (filtered.length === 0) {
+            container.innerHTML =
+                '<div class="message">No matching issues found.</div>';
+            return;
+        }
+
+        container.innerHTML = filtered.map(issue => {
+            const id = escapeHTML(issue.id);
+            const title = escapeHTML(issue.title || "Untitled Issue");
+            const description = escapeHTML(
+                issue.description || "No description provided."
+            );
+            const severityValue = normalize(issue.severity) || "MEDIUM";
+            const statusValue = normalize(issue.status) || "OPEN";
+            const handoverId = issue.handover
+                ? escapeHTML(issue.handover.id)
+                : "N/A";
+
+            return `
+                <article class="issue-card">
+                    <div class="issue-top">
+                        <div>
+                            <div class="issue-id">ISSUE #${id}</div>
+                            <div class="issue-title">${title}</div>
+                        </div>
+                    </div>
+
+                    <p class="description">${description}</p>
+
+                    <div class="meta">
+                        <span class="badge ${getSeverityClass(severityValue)}">
+                            ${escapeHTML(severityValue)}
+                        </span>
+
+                        <span class="badge ${getStatusClass(statusValue)}">
+                            ${escapeHTML(statusValue.replace("_", " "))}
+                        </span>
+
+                        <span class="handover">
+                            Handover #${handoverId}
+                        </span>
+                    </div>
+                </article>
+            `;
+        }).join("");
+    }
+
+    async function loadIssues() {
+        const container = document.getElementById("issueList");
+
+        try {
+            const response = await fetch("/api/issues");
+
+            if (!response.ok) {
+                throw new Error("Failed to load issues");
+            }
+
+            const data = await response.json();
+
+            allIssues = Array.isArray(data) ? data : [];
+
+            updateStats(allIssues);
+            renderIssues();
+
+        } catch (error) {
+            console.error("Error loading issues:", error);
+
+            container.innerHTML = `
+                <div class="message error">
+                    Could not load issues. Please refresh the page.
+                </div>
+            `;
+        }
+    }
+
+    loadIssues();
+</script>
+
+</body>
+</html>

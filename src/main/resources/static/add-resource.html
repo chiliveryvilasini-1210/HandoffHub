@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Resource - HandoffHub</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #080b14;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 240px;
+            background: #0d111d;
+            border-right: 1px solid #20283a;
+            padding: 28px 18px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00e5ff;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            font-size: 12px;
+            color: #6f7a90;
+            margin-bottom: 35px;
+        }
+
+        .nav-title {
+            color: #59657a;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 12px 10px;
+        }
+
+        .nav-item {
+            display: block;
+            width: 100%;
+            padding: 13px 14px;
+            margin-bottom: 6px;
+            border-radius: 10px;
+            color: #9ca7bb;
+            text-decoration: none;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #101d2d;
+            color: #00e5ff;
+            box-shadow: inset 2px 0 0 #00e5ff;
+        }
+
+        /* MAIN */
+
+        .main {
+            flex: 1;
+            padding: 35px 40px;
+        }
+
+        .back {
+            display: inline-block;
+            color: #00e5ff;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .topbar {
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .topbar p {
+            color: #7f8ba0;
+            margin-top: 8px;
+        }
+
+        /* FORM */
+
+        .form-card {
+            max-width: 750px;
+            background: linear-gradient(145deg, #101624, #0d121e);
+            border: 1px solid #202b3e;
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 9px;
+            color: #cbd5e1;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            max-width: 100%;
+            padding: 14px;
+            border: 1px solid #26344d;
+            border-radius: 10px;
+            background: #080d18;
+            color: white;
+            outline: none;
+            font-size: 14px;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #00e5ff;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.15);
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #00e5ff;
+            color: #080b14;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.35);
+        }
+
+        .message {
+            margin-top: 18px;
+            padding: 13px;
+            border-radius: 9px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .success {
+            display: block;
+            background: rgba(0, 255, 150, 0.08);
+            border: 1px solid #00ff96;
+            color: #00ff96;
+        }
+
+        .error {
+            display: block;
+            background: rgba(255, 70, 70, 0.08);
+            border: 1px solid #ff4646;
+            color: #ff7070;
+        }
+
+        @media (max-width: 650px) {
+
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .main {
+                padding: 25px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="layout">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            HandoffHub
+        </div>
+
+        <div class="tagline">
+            Knowledge shouldn't leave with people.
+        </div>
+
+
+        <div class="nav-title">
+            Workspace
+        </div>
+
+
+        <a href="dashboard.html" class="nav-item">
+            Dashboard
+        </a>
+
+
+        <a href="projects.html" class="nav-item">
+            Projects
+        </a>
+
+
+        <a href="handovers.html" class="nav-item">
+            Handovers
+        </a>
+
+
+        <a href="knowledge.html" class="nav-item">
+            Knowledge
+        </a>
+
+
+        <a href="risk.html" class="nav-item">
+            Risk
+        </a>
+
+
+        <div class="nav-title">
+            System
+        </div>
+
+
+        <a href="activity.html" class="nav-item">
+            Activity
+        </a>
+
+
+        <a href="profile.html" class="nav-item">
+            Profile
+        </a>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+
+        <a href="#" class="back" id="backLink">
+            ← Back to Handover Details
+        </a>
+
+
+        <div class="topbar">
+
+            <h1>
+                Add Resource
+            </h1>
+
+            <p>
+                Add important documentation, links, or references to a handover.
+            </p>
+
+        </div>
+
+
+        <div class="form-card">
+
+            <form id="resourceForm">
+
+
+                <!-- HANDOVER ID -->
+
+                <div class="form-group">
+
+                    <label for="handoverId">
+                        Handover ID
+                    </label>
+
+                    <input
+                            type="number"
+                            id="handoverId"
+                            value="2"
+                            required
+                    >
+
+                </div>
+
+
+                <!-- TITLE -->
+
+                <div class="form-group">
+
+                    <label for="title">
+                        Resource Title
+                    </label>
+
+                    <input
+                            type="text"
+                            id="title"
+                            placeholder="Enter resource title"
+                            required
+                    >
+
+                </div>
+
+
+                <!-- URL -->
+
+                <div class="form-group">
+
+                    <label for="url">
+                        Resource URL
+                    </label>
+
+                    <input
+                            type="url"
+                            id="url"
+                            placeholder="https://example.com/documentation"
+                            required
+                    >
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="form-group">
+
+                    <label for="description">
+                        Description
+                    </label>
+
+                    <textarea
+                            id="description"
+                            placeholder="Describe what this resource contains..."
+                    ></textarea>
+
+                </div>
+
+
+                <button
+                        type="submit"
+                        class="submit-btn"
+                >
+                    Add Resource
+                </button>
+
+
+                <div
+                        id="message"
+                        class="message"
+                ></div>
+
+
+            </form>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+
+<script>
+
+
+    /* GET HANDOVER ID FROM URL */
+
+    const params =
+        new URLSearchParams(window.location.search);
+
+    const urlHandoverId =
+        params.get("id");
+
+
+    const handoverIdInput =
+        document.getElementById("handoverId");
+
+
+    const backLink =
+        document.getElementById("backLink");
+
+
+    if (urlHandoverId) {
+
+        handoverIdInput.value =
+            urlHandoverId;
+
+        backLink.href =
+            "handover-details.html?id=" +
+            urlHandoverId;
+
+    } else {
+
+        backLink.href =
+            "handover-details.html?id=" +
+            handoverIdInput.value;
+
+    }
+
+
+    /* SUBMIT RESOURCE */
+
+    document.getElementById("resourceForm")
+        .addEventListener("submit", async function(event) {
+
+            event.preventDefault();
+
+
+            const handoverId =
+                document.getElementById("handoverId").value;
+
+
+            const title =
+                document.getElementById("title").value.trim();
+
+
+            const url =
+                document.getElementById("url").value.trim();
+
+
+            const description =
+                document.getElementById("description").value.trim();
+
+
+            const message =
+                document.getElementById("message");
+
+
+            if (!handoverId || !title || !url) {
+
+                message.className =
+                    "message error";
+
+                message.textContent =
+                    "Please fill all required fields.";
+
+                return;
+
+            }
+
+
+            const resourceData = {
+
+                title: title,
+
+                url: url,
+
+                description: description,
+
+                handover: {
+                    id: Number(handoverId)
+                }
+
+            };
+
+
+            try {
+
+                const response =
+                    await fetch("/api/resources", {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify(resourceData)
+
+                    });
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Failed to add resource"
+                    );
+
+                }
+
+
+                const result =
+                    await response.json();
+
+
+                message.className =
+                    "message success";
+
+
+                message.textContent =
+                    "Resource added successfully! Resource ID: #" +
+                    result.id;
+
+
+                document.getElementById("title").value = "";
+
+                document.getElementById("url").value = "";
+
+                document.getElementById("description").value = "";
+
+
+            } catch (error) {
+
+                message.className =
+                    "message error";
+
+
+                message.textContent =
+                    "Error: " + error.message;
+
+            }
+
+        });
+
+</script>
+
+
+</body>
+
+</html>

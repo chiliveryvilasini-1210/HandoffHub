@@ -143,23 +143,23 @@
         <label for="email">Email address</label>
 
         <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Enter your email"
-            autocomplete="username"
-            required
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                autocomplete="username"
+                required
         >
 
         <label for="password">Password</label>
 
         <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Enter your password"
-            autocomplete="current-password"
-            required
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
         >
 
         <button type="submit" id="loginButton">
@@ -178,8 +178,6 @@
 
 <script>
 
-    const BACKEND_URL = "https://handoffhub.onrender.com";
-
     const loginForm = document.getElementById("loginForm");
     const message = document.getElementById("message");
     const loginButton = document.getElementById("loginButton");
@@ -187,15 +185,18 @@
     const params = new URLSearchParams(window.location.search);
 
     if (params.has("error")) {
+
         message.textContent =
             "Login failed. Please check your email and password.";
-    }
 
-    if (params.has("logout")) {
+    } else if (params.has("logout")) {
+
         message.classList.add("success");
+
         message.textContent =
             "You have been logged out successfully.";
     }
+
 
     loginForm.addEventListener("submit", async function (event) {
 
@@ -206,6 +207,7 @@
 
         loginButton.disabled = true;
         loginButton.textContent = "Signing in...";
+
 
         const formData = new URLSearchParams();
 
@@ -219,10 +221,11 @@
             document.getElementById("password").value
         );
 
+
         try {
 
             const response = await fetch(
-                BACKEND_URL + "/login",
+                "https://handoffhub.onrender.com/login",
                 {
                     method: "POST",
 
@@ -239,42 +242,39 @@
                 }
             );
 
-            if (response.redirected) {
 
-                const redirectedUrl =
-                    new URL(response.url);
+            if (
+                response.redirected &&
+                new URL(response.url).pathname === "/dashboard.html"
+            ) {
 
-                if (
-                    redirectedUrl.pathname ===
-                    "/dashboard.html"
-                ) {
-                    window.location.href =
-                        BACKEND_URL + "/dashboard.html";
-
-                    return;
-                }
-
-                if (
-                    redirectedUrl.pathname ===
-                    "/login.html"
-                ) {
-                    message.textContent =
-                        "Login failed. Please check your email and password.";
-
-                    return;
-                }
-            }
-
-            if (!response.ok) {
-
-                message.textContent =
-                    "Unable to sign in. Please try again.";
+                window.location.replace(
+                    "https://handoffhub.onrender.com/dashboard.html"
+                );
 
                 return;
             }
 
-            message.textContent =
-                "Login response received, but the session needs verification.";
+
+            if (
+                response.redirected &&
+                new URL(response.url).pathname === "/login.html"
+            ) {
+
+                message.textContent =
+                    "Login failed. Please check your email and password.";
+
+            } else if (!response.ok) {
+
+                message.textContent =
+                    "Unable to sign in. Please try again.";
+
+            } else {
+
+                message.textContent =
+                    "Login response received, but the session needs verification.";
+            }
+
 
         } catch (error) {
 

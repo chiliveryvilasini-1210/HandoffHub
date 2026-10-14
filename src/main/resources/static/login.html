@@ -127,6 +127,7 @@
 </head>
 
 <body>
+
 <div class="login-card">
 
     <div class="logo">
@@ -138,6 +139,7 @@
     <p class="subtitle">Sign in to access your workspace.</p>
 
     <form id="loginForm">
+
         <label for="email">Email address</label>
 
         <input
@@ -165,6 +167,7 @@
         </button>
 
         <p id="message" role="status" aria-live="polite"></p>
+
     </form>
 
     <p class="footer">
@@ -174,31 +177,28 @@
 </div>
 
 <script>
+
+    const BACKEND_URL = "https://handoffhub.onrender.com";
+
     const loginForm = document.getElementById("loginForm");
     const message = document.getElementById("message");
     const loginButton = document.getElementById("loginButton");
-
-    /*
-     * IMPORTANT:
-     * Replace this with your actual Render backend URL.
-     *
-     * Example:
-     * const BACKEND_URL = "https://handoffhub-backend.onrender.com";
-     */
-    const BACKEND_URL = "YOUR_RENDER_BACKEND_URL";
 
     const params = new URLSearchParams(window.location.search);
 
     if (params.has("error")) {
         message.textContent =
             "Login failed. Please check your email and password.";
-    } else if (params.has("logout")) {
+    }
+
+    if (params.has("logout")) {
         message.classList.add("success");
         message.textContent =
             "You have been logged out successfully.";
     }
 
     loginForm.addEventListener("submit", async function (event) {
+
         event.preventDefault();
 
         message.textContent = "";
@@ -220,53 +220,77 @@
         );
 
         try {
+
             const response = await fetch(
                 BACKEND_URL + "/login",
                 {
                     method: "POST",
+
                     headers: {
                         "Content-Type":
                             "application/x-www-form-urlencoded"
                     },
+
                     body: formData.toString(),
+
                     credentials: "include",
+
                     redirect: "follow"
                 }
             );
 
-            if (
-                response.redirected &&
-                new URL(response.url).pathname === "/dashboard.html"
-            ) {
-                window.location.href =
-                    BACKEND_URL + "/dashboard.html";
+            if (response.redirected) {
+
+                const redirectedUrl =
+                    new URL(response.url);
+
+                if (
+                    redirectedUrl.pathname ===
+                    "/dashboard.html"
+                ) {
+                    window.location.href =
+                        BACKEND_URL + "/dashboard.html";
+
+                    return;
+                }
+
+                if (
+                    redirectedUrl.pathname ===
+                    "/login.html"
+                ) {
+                    message.textContent =
+                        "Login failed. Please check your email and password.";
+
+                    return;
+                }
+            }
+
+            if (!response.ok) {
+
+                message.textContent =
+                    "Unable to sign in. Please try again.";
+
                 return;
             }
 
-            if (
-                response.redirected &&
-                new URL(response.url).pathname === "/login.html"
-            ) {
-                message.textContent =
-                    "Login failed. Please check your email and password.";
-            } else if (!response.ok) {
-                message.textContent =
-                    "Unable to sign in. Please try again.";
-            } else {
-                message.textContent =
-                    "Login response received, but the session needs verification.";
-            }
+            message.textContent =
+                "Login response received, but the session needs verification.";
 
         } catch (error) {
+
             console.error("Login error:", error);
 
             message.textContent =
                 "Unable to connect to the server. Please try again.";
+
         } finally {
+
             loginButton.disabled = false;
             loginButton.textContent = "Sign In";
         }
+
     });
+
 </script>
 
 </body>

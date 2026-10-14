@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -139,26 +139,30 @@
 
     <form id="loginForm">
         <label for="email">Email address</label>
+
         <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="Enter your email"
-                autocomplete="username"
-                required
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            autocomplete="username"
+            required
         >
 
         <label for="password">Password</label>
+
         <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="Enter your password"
-                autocomplete="current-password"
-                required
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
         >
 
-        <button type="submit" id="loginButton">Sign In</button>
+        <button type="submit" id="loginButton">
+            Sign In
+        </button>
 
         <p id="message" role="status" aria-live="polite"></p>
     </form>
@@ -174,7 +178,15 @@
     const message = document.getElementById("message");
     const loginButton = document.getElementById("loginButton");
 
-    // Show Spring Security login errors from the URL.
+    /*
+     * IMPORTANT:
+     * Replace this with your actual Render backend URL.
+     *
+     * Example:
+     * const BACKEND_URL = "https://handoffhub-backend.onrender.com";
+     */
+    const BACKEND_URL = "YOUR_RENDER_BACKEND_URL";
+
     const params = new URLSearchParams(window.location.search);
 
     if (params.has("error")) {
@@ -182,7 +194,8 @@
             "Login failed. Please check your email and password.";
     } else if (params.has("logout")) {
         message.classList.add("success");
-        message.textContent = "You have been logged out successfully.";
+        message.textContent =
+            "You have been logged out successfully.";
     }
 
     loginForm.addEventListener("submit", async function (event) {
@@ -195,35 +208,45 @@
         loginButton.textContent = "Signing in...";
 
         const formData = new URLSearchParams();
+
         formData.append(
             "email",
             document.getElementById("email").value.trim()
         );
+
         formData.append(
             "password",
             document.getElementById("password").value
         );
 
         try {
-            const response = await fetch("/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type":
-                        "application/x-www-form-urlencoded"
-                },
-                body: formData.toString(),
-                credentials: "same-origin",
-                redirect: "follow"
-            });
+            const response = await fetch(
+                BACKEND_URL + "/login",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type":
+                            "application/x-www-form-urlencoded"
+                    },
+                    body: formData.toString(),
+                    credentials: "include",
+                    redirect: "follow"
+                }
+            );
 
-            if (response.redirected &&
-                new URL(response.url).pathname === "/dashboard.html") {
-                window.location.replace("/dashboard.html");
+            if (
+                response.redirected &&
+                new URL(response.url).pathname === "/dashboard.html"
+            ) {
+                window.location.href =
+                    BACKEND_URL + "/dashboard.html";
                 return;
             }
 
-            if (response.redirected &&
-                new URL(response.url).pathname === "/login.html") {
+            if (
+                response.redirected &&
+                new URL(response.url).pathname === "/login.html"
+            ) {
                 message.textContent =
                     "Login failed. Please check your email and password.";
             } else if (!response.ok) {
@@ -235,6 +258,8 @@
             }
 
         } catch (error) {
+            console.error("Login error:", error);
+
             message.textContent =
                 "Unable to connect to the server. Please try again.";
         } finally {
@@ -243,5 +268,7 @@
         }
     });
 </script>
+
 </body>
 </html>
+```
